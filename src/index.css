@@ -1,0 +1,33 @@
+
+body { 
+  background-image: url("/public/assets/bg.svg");
+  background-size: cover;
+}
+
+@font-face {
+  font-family: 'Placard';
+  src: url('../src/assets/font/PlacardNextRegular.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Placard';
+  src: url('../src/assets/font/PlacardNextMedium.TTF') format('truetype');
+  font-weight: 500;
+  font-style: medium;
+}
+
+@font-face {
+  font-family: 'Placard';
+  src: url('../src/assets/font/PlacardNextBold.TTF') format('truetype');
+  font-weight: 700;
+  font-style: bold;
+}
+
+@import "tailwindcss";
+
+
+@theme {
+  --font-placard: 'Placard', sans-serif;
+}
