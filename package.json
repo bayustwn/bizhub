@@ -15,6 +15,7 @@
     "motion": "^12.9.4",
     "react": "^19.0.0",
     "react-cookie": "^8.0.1",
+    "react-data-table-component": "^7.7.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-router": "^7.5.3",

@@ -1,30 +1,46 @@
 import axios from "axios";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
-import { CookiesValue } from "../../models/cookie";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import Loading from "../../component/Loading";
+import { useToken } from "../../utils/Cookies";
 
 function Login() {
-  const [email, setEmail] = useState<String>("");
-  const [password, setPassword] = useState<String>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies<"session", CookiesValue>([
-    "session",
-  ]);
+  const [isLoading, setIsLogin] = useState<boolean>(false);
+  const {getToken,setToken} = useToken()
   
-  const handleLogin = async () => {
 
-    await axios
-      .post(import.meta.env.VITE_BASE_URL + "/auth/login", { email, password })
-      .then((res) => {
-        setCookie("session", res.data.data.token);
-        navigate('/dashboard');
-      })
-      .catch((err) => {
-        toast.error(err.response.data?.message);
-      });
+  const handleLogin = async () => {
+    if (email && password) {
+        setIsLogin(true);
+        await axios
+          .post(import.meta.env.VITE_BASE_URL + "/auth/login", {
+            email,
+            password,
+          })
+          .then((res) => {
+            setToken(res.data.data.token);
+            navigate("/dashboard");
+          })
+          .catch((err) => {
+            toast.error(err.response.data?.message);
+          })
+          .finally(() => {
+            setIsLogin(false);
+          });
+    } else {
+      toast.error("Isi form dengan benar!");
+    }
   };
+
+  useEffect(() => {
+    if (getToken()) {
+      navigate("/dashboard");
+    }
+  }, [getToken(), navigate]);
 
   return (
     <div className="justify-center font-poppins flex items-center h-screen w-screen">
@@ -58,10 +74,11 @@ function Login() {
           />
         </div>
         <button
-          onClick={handleLogin}
-          className="bg-primary text-white py-3 rounded-lg hover:cursor-pointer"
+          onClick={isLoading ? undefined : handleLogin}
+          disabled={isLoading}
+          className="bg-primary h-13 flex items-center justify-center text-white rounded-lg hover:cursor-pointer"
         >
-          Masuk
+          {isLoading ? <Loading /> : "Masuk"}
         </button>
       </div>
     </div>
