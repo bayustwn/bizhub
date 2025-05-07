@@ -1,11 +1,12 @@
-interface Task{
-    id:string
-    judul:string
-    brief:string
-    kuantitas:string
-    terlambat:boolean
-    status:string
-    id_admin:string
-    tanggal_dibuat:string
-    tanggal_diubah:string
-}
+export interface Tugas {
+    id: string;
+    brief: string;
+    deadline: string;
+    id_admin: string;
+    judul: string;
+    kuantitas: number;
+    status: string;
+    tanggal_dibuat?: Date;
+    tanggal_diubah?: Date;
+    terlambat: boolean;
+  }
