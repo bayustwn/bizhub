@@ -25,7 +25,7 @@ const Sidebar = () => {
         />
         <SidebarLink to="/" text="Semua Tugas" icon="/assets/icons/task.svg" />
         <SidebarLink
-          to="/"
+          to="/admin/anggota"
           text="Anggota Tim"
           icon="/assets/icons/user.svg"
           iconSize="w-4"

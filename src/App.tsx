@@ -5,12 +5,14 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./utils/PrivateRoute";
 import AlreadyLogin from "./utils/AlreadyLogin";
+import Anggota from "./pages/admin/anggota/Anggota";
 
 function App() {
   return (
     <Routes>
       <Route element={<PrivateRoute />}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/anggota" element={<Anggota />} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />
