@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./utils/PrivateRoute";
 import AlreadyLogin from "./utils/AlreadyLogin";
 import Anggota from "./pages/admin/anggota/Anggota";
+import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route element={<PrivateRoute />}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/anggota" element={<Anggota />} />
+        <Route path="/admin/performa" element={<PerformaAnggota/>}/>
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

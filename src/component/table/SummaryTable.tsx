@@ -26,23 +26,23 @@ const columns: TableColumn<Tugas>[] = [
     selector: (row) => row.status,
     cell: (row) => {
       if (row.terlambat) {
-        return <div className="px-5 font-medium py-1  rounded-md w-25 text-center text-white bg-red">
+        return <div className="px-5 font-medium py-1  rounded-md w-28 text-center text-white bg-red">
                 <p>Terlambat</p>
               </div>;
       }else{
         switch (row.status) {
             case "Dikerjakan":
-              return <div className="px-5 font-medium py-1  rounded-md w-25 text-center text-white bg-primary">
+              return <div className="px-5 font-medium py-1  rounded-md w-28 text-center text-white bg-primary">
                 <p>Dikerjakan</p>
               </div>;
 
             case "Selesai":
-              return <div className="px-5 font-medium py-1  rounded-md w-25 text-center text-white bg-green">
+              return <div className="px-5 font-medium py-1  rounded-md w-28 text-center text-white bg-green">
                 <p>Selesai</p>
               </div>;
     
             case "Revisi":
-              return <div className="px-5 py-1 font-medium rounded-md w-25 text-center  bg-yellow text-black">
+              return <div className="px-5 py-1 font-medium rounded-md w-28 text-center  bg-yellow text-black">
                 <p>Revisi</p>
               </div>;
           }

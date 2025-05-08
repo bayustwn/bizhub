@@ -38,7 +38,7 @@ const Sidebar = () => {
           iconSize="w-4"
         />
         <SidebarLink
-          to="/"
+          to="/admin/performa"
           text="Performa Anggota"
           icon="/assets/icons/perform.svg"
           iconInactive="/assets/icons/inactive/perform.svg"

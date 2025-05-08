@@ -5,7 +5,9 @@ import Navbar from "../../../component/Navbar";
 import { useEffect, useState } from "react";
 import { useToken } from "../../../utils/Cookies";
 import { Mingguan, Tugas } from "../../../models/task/task";
-import DataTable, { createTheme, TableColumn } from "react-data-table-component";
+import DataTable, {
+  TableColumn,
+} from "react-data-table-component";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { filterRange } from "../../../utils/FilterTugas";
 
@@ -21,7 +23,6 @@ function Dashboard() {
       })
       .then((res) => {
         setTugas(res.data.data);
-        console.log(res.data.data);
       });
   };
 
@@ -34,35 +35,38 @@ function Dashboard() {
       })
       .then((res) => {
         setTotal(res.data.data);
-        console.log(res.data.data);
       });
   };
 
-  const tugasSelesai = (): number =>{
-    let terbaru: number = tugas? tugas.filter(data=>data.status == "Selesai").length : 0
-    return terbaru
-  }
+  const tugasSelesai = (): number => {
+    let terbaru: number = tugas
+      ? tugas.filter((data) => data.status == "Selesai").length
+      : 0;
+    return terbaru;
+  };
 
-  const tugasTerlambat = () :number =>{
-    let terbaru: number = tugas? tugas.filter(data=>data.terlambat == true).length : 0
-    return terbaru
-  }
+  const tugasTerlambat = (): number => {
+    let terbaru: number = tugas
+      ? tugas.filter((data) => data.terlambat == true).length
+      : 0;
+    return terbaru;
+  };
 
   const columns: TableColumn<Mingguan>[] = [
     {
-        name: "Nama",
-        selector: (row) => row.nama,
+      name: "Nama",
+      selector: (row) => row.nama,
+    },
+    {
+      name: "Total Tugas",
+      selector: (row) => row._count.user_tugas,
+      cell: (row) => {
+        return (
+          <p className="font-bold text-primary">{row._count.user_tugas}</p>
+        );
       },
-      {
-        name: "Total Tugas",
-        selector: (row) => row._count.user_tugas,
-        cell : (row)=>{
-          return (
-            <p className="font-bold text-primary" >{row._count.user_tugas}</p>
-          )
-        }
-      }
-    ]
+    },
+  ];
 
   useEffect(() => {
     getTugas();
@@ -109,7 +113,12 @@ function Dashboard() {
             <p className="font-bold">Performa Mingguan</p>
             <More />
           </div>
-          <DataTable highlightOnHover theme="tables" columns={columns} data={total? total: []} />
+          <DataTable
+            highlightOnHover
+            theme="tables"
+            columns={columns}
+            data={total ? total : []}
+          />
         </div>
       </div>
     </div>
