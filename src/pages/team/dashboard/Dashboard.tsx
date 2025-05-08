@@ -109,7 +109,7 @@ function Dashboard() {
             <p className="font-bold">Performa Mingguan</p>
             <More />
           </div>
-          <DataTable columns={columns} data={total? total: []} />
+          <DataTable highlightOnHover columns={columns} data={total? total: []} />
         </div>
       </div>
     </div>

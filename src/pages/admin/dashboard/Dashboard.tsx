@@ -5,7 +5,7 @@ import Navbar from "../../../component/Navbar";
 import { useEffect, useState } from "react";
 import { useToken } from "../../../utils/Cookies";
 import { Mingguan, Tugas } from "../../../models/task/task";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, { createTheme, TableColumn } from "react-data-table-component";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { filterRange } from "../../../utils/FilterTugas";
 
@@ -55,7 +55,12 @@ function Dashboard() {
       },
       {
         name: "Total Tugas",
-        selector: (row) => row._count.user_tugas
+        selector: (row) => row._count.user_tugas,
+        cell : (row)=>{
+          return (
+            <p className="font-bold text-primary" >{row._count.user_tugas}</p>
+          )
+        }
       }
     ]
 
@@ -104,7 +109,7 @@ function Dashboard() {
             <p className="font-bold">Performa Mingguan</p>
             <More />
           </div>
-          <DataTable columns={columns} data={total? total: []} />
+          <DataTable highlightOnHover theme="tables" columns={columns} data={total? total: []} />
         </div>
       </div>
     </div>

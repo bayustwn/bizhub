@@ -1,10 +1,16 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, { createTheme, TableColumn } from "react-data-table-component";
 import { Tugas } from "../../models/task/task";
 import { formatDate } from "../../utils/DateFormat";
 
 interface Data {
   data: Tugas[];
 }
+
+createTheme('tables',{
+    divider :{
+        default : '#FFFFFF'
+    }
+})
 
 const columns: TableColumn<Tugas>[] = [
   {
@@ -46,7 +52,7 @@ const columns: TableColumn<Tugas>[] = [
 ];
 
 function SummaryTable({ data }: Data) {
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable theme="tables" highlightOnHover columns={columns} data={data} />;
 }
 
 export default SummaryTable;

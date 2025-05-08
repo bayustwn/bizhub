@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../../../component/Navbar";
 import axios from "axios";
 import { useToken } from "../../../utils/Cookies";
-import { Mingguan, User } from "../../../models/task/task";
+import { Mingguan } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
 
 function Anggota() {
@@ -30,14 +30,19 @@ function Anggota() {
         },
         {
             name : "Tugas Aktif",
-            selector : (row)=>row._count.user_tugas
+            selector : (row)=>row._count.user_tugas,
+            cell : (row)=>{
+                return (
+                    <p className="font-bold text-primary">{row._count.user_tugas}</p>
+                )
+            }
         }
     ]
 
   return (
     <div className="flex flex-col gap-5 w-full font-poppins">
       <Navbar title="Anggota Tim" />
-      <div className="flex flex-row text-white font-medium gap-2 mt-10">
+      <div className="flex flex-row text-white font-medium gap-2 mt-8">
         <div className="flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 bg-primary">
           <p>Copy Writer</p>
           <img src="/assets/icons/writer.svg" width={20} alt="writer" />
@@ -53,13 +58,13 @@ function Anggota() {
       </div>
       <div className="flex flex-row gap-2 h-50">
         <div className="flex flex-col flex-1 bg-white rounded-lg border-2 border-black">
-            <DataTable columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "writer")! : []} />
+            <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "writer")! : []} />
         </div>
         <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-        <DataTable columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "image")! : []} />
+        <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "image")! : []} />
         </div>
         <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-        <DataTable columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "video")! : []} />
+        <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "video")! : []} />
         </div>
       </div>
     </div>

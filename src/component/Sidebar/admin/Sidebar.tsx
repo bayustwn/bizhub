@@ -22,18 +22,26 @@ const Sidebar = () => {
           to="/admin/dashboard"
           text="Dasbor"
           icon="/assets/icons/dashboard.svg"
+          iconInactive="/assets/icons/inactive/dashboard.svg"
         />
-        <SidebarLink to="/" text="Semua Tugas" icon="/assets/icons/task.svg" />
+        <SidebarLink
+          to="/"
+          text="Semua Tugas"
+          icon="/assets/icons/task.svg"
+          iconInactive="/assets/icons/inactive/task.svg"
+        />
         <SidebarLink
           to="/admin/anggota"
           text="Anggota Tim"
           icon="/assets/icons/user.svg"
+          iconInactive="/assets/icons/inactive/user.svg"
           iconSize="w-4"
         />
         <SidebarLink
           to="/"
           text="Performa Anggota"
           icon="/assets/icons/perform.svg"
+          iconInactive="/assets/icons/inactive/perform.svg"
         />
       </nav>
       <div
@@ -48,13 +56,13 @@ const Sidebar = () => {
         <p>Keluar</p>
       </div>
       <ConfirmModal
-          confirmText="Logout"
-          isOpen={isOpen}
-          onCancel={()=>setIsOpen(false)}
-          title="Yakin Untuk Logout?"
-          message="Kamu tetap bisa login kembali setelah logout."
-          onConfirm={logout}
-        />
+        confirmText="Logout"
+        isOpen={isOpen}
+        onCancel={() => setIsOpen(false)}
+        title="Yakin Untuk Logout?"
+        message="Kamu tetap bisa login kembali setelah logout."
+        onConfirm={logout}
+      />
     </div>
   );
 };
