@@ -6,7 +6,7 @@ const AlreadyLogin = () =>{
     const [cookies] = useCookies<'session',CookiesValue>(['session'])
 
     return (    
-        cookies.session? <Navigate to={'/dashboard'} replace /> : <Outlet/> 
+        cookies.session? <Navigate to={'/admin/dashboard'} replace /> : <Outlet/> 
     )
 }
 

@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie";
 import { Outlet, Navigate } from "react-router";
 import { CookiesValue } from "../models/cookie";
-import Sidebar from "../component/Sidebar/Sidebar";
+import Sidebar from "../component/Sidebar/admin/Sidebar";
 
 const PrivateRoute = () => {
   const [cookies] = useCookies<"session", CookiesValue>(["session"]);

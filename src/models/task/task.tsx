@@ -9,4 +9,17 @@ export interface Tugas {
     tanggal_dibuat?: Date;
     tanggal_diubah?: Date;
     terlambat: boolean;
-  }
+}
+
+export interface User{
+    id:string
+    nama:string
+    email: string
+    posisi: string
+}
+
+export interface Mingguan extends User{
+   _count: {
+    user_tugas: number
+   }
+}

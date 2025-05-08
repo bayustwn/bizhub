@@ -23,7 +23,7 @@ function Login() {
           })
           .then((res) => {
             setToken(res.data.data.token);
-            navigate("/dashboard");
+            navigate("/admin/dashboard");
           })
           .catch((err) => {
             toast.error(err.response.data?.message);
@@ -38,7 +38,7 @@ function Login() {
 
   useEffect(() => {
     if (getToken()) {
-      navigate("/dashboard");
+      navigate("/admin/dashboard");
     }
   }, [getToken(), navigate]);
 

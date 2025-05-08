@@ -10,7 +10,7 @@ function App() {
   return (
     <Routes>
       <Route element={<PrivateRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />
