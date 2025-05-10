@@ -25,7 +25,7 @@ const Sidebar = () => {
           iconInactive="/assets/icons/inactive/dashboard.svg"
         />
         <SidebarLink
-          to="/"
+          to="/admin/semua-tugas"
           text="Semua Tugas"
           icon="/assets/icons/task.svg"
           iconInactive="/assets/icons/inactive/task.svg"

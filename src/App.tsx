@@ -6,7 +6,9 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./utils/PrivateRoute";
 import AlreadyLogin from "./utils/AlreadyLogin";
 import Anggota from "./pages/admin/anggota/Anggota";
+import PerformaBulananAnggota from "./pages/admin/performa/Anggota/Anggota";
 import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
+import SemuaTugas from "./pages/admin/tugas/SemuaTugas";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/anggota" element={<Anggota />} />
         <Route path="/admin/performa" element={<PerformaAnggota/>}/>
+        <Route path="/admin/performa/anggota/:id" element={<PerformaBulananAnggota/>} />
+        <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

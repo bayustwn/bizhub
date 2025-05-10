@@ -25,6 +25,7 @@ export interface Mingguan extends User {
 }
 
 export interface Performa {
+  id: string;
   nama: string;
   email: string;
   posisi: string;

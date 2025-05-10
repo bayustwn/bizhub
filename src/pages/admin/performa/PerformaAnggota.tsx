@@ -4,10 +4,12 @@ import axios from "axios";
 import { useToken } from "../../../utils/Cookies";
 import { Performa } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
+import { useNavigate } from "react-router";
 
 function PerformaAnggota() {
   const { getToken } = useToken();
   const [anggotaTim, setAnggotaTim] = useState<Performa[]>();
+  const navigate = useNavigate();
 
   const getAnggotaTim = async () => {
     await axios
@@ -65,7 +67,7 @@ function PerformaAnggota() {
 
   return (
     <div className="flex flex-col gap-5 w-full font-poppins">
-      <Navbar title="Anggota Tim" />
+      <Navbar title="Performa Anggota Tim" />
       <div className="flex flex-row text-white font-medium gap-2 mt-8">
         <div className="flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 bg-primary">
           <p>Copy Writer</p>
@@ -108,6 +110,7 @@ function PerformaAnggota() {
         <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
           <DataTable
             highlightOnHover
+            onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
             theme="tables"
             columns={columns}
             data={

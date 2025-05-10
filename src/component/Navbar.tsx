@@ -5,9 +5,10 @@ import { useToken } from "../utils/Cookies";
 interface NavbarItems {
   title: string;
   id?: (id: string) => void;
+  style?:string
 }
 
-function Navbar({ title,id }: NavbarItems) {
+function Navbar({ title,id,style }: NavbarItems) {
   const [name, setName] = useState<string>("");
   const {getToken} = useToken();
 
@@ -23,7 +24,7 @@ function Navbar({ title,id }: NavbarItems) {
   useEffect(() => {profile()},[]);
 
   return (
-    <nav className="flex w-full flex-row items-center justify-between">
+    <nav className={`flex w-full ${style} flex-row items-center justify-between`}>
       <p className="font-placard text-primary font-bold text-5xl">{title}</p>
       <div className="flex flex-row gap-3">
         <img src="/assets/icons/notification.svg" alt="notification" />

@@ -2,11 +2,12 @@ import { useCookies } from "react-cookie";
 import { Outlet, Navigate } from "react-router";
 import { CookiesValue } from "../models/cookie";
 import Sidebar from "../component/Sidebar/admin/Sidebar";
+import { useToken } from "./Cookies";
 
 const PrivateRoute = () => {
-  const [cookies] = useCookies<"session", CookiesValue>(["session"]);
+  const {getToken} = useToken()
 
-  return cookies.session ? (
+  return getToken()? (
     <div className="flex flex-row h-screen">
       <Sidebar />
       <div className="h-screen p-10 w-full overflow-auto">
