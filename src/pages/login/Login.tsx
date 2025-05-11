@@ -22,8 +22,15 @@ function Login() {
             password,
           })
           .then((res) => {
+            const posisi = res.data.data.posisi;
             setToken(res.data.data.token);
-            navigate("/admin/dashboard");
+            localStorage.setItem("posisi", posisi);
+
+            if (posisi === "admin") {
+              navigate("/admin/dashboard");
+            } else {
+              navigate("/team/dashboard");
+            }
           })
           .catch((err) => {
             toast.error(err.response.data?.message);
@@ -37,10 +44,17 @@ function Login() {
   };
 
   useEffect(() => {
-    if (getToken()) {
+  const token = getToken();
+  const posisi = localStorage.getItem("posisi");
+
+  if (token && posisi) {
+    if (posisi === "admin") {
       navigate("/admin/dashboard");
+    } else {
+      navigate("/team/dashboard");
     }
-  }, [getToken(), navigate]);
+  }
+}, [getToken(), navigate]);
 
   return (
     <div className="justify-center font-poppins flex items-center h-screen w-screen">

@@ -106,7 +106,7 @@ function Dashboard() {
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
-            <p className="font-bold">Performa Mingguan</p>
+            <p className="font-bold">Tugas Revisi</p>
             <More />
           </div>
           <DataTable highlightOnHover columns={columns} data={total? total: []} />

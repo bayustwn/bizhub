@@ -5,18 +5,39 @@ import Sidebar from "../component/Sidebar/admin/Sidebar";
 import { useToken } from "./Cookies";
 
 const PrivateRoute = () => {
-  const {getToken} = useToken()
+  const {getToken} = useToken();
+  const token = getToken();
+  const posisi = localStorage.getItem("posisi");
 
-  return getToken()? (
-    <div className="flex flex-row h-screen">
-      <Sidebar />
-      <div className="h-screen p-10 w-full overflow-auto">
-        <Outlet /> 
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  if (posisi === "admin") {
+    return (
+      <div className="flex">
+        <Sidebar />
+        <div className="w-full h-screen overflow-y-auto bg-[#F5F5F5]">
+          <Outlet />
+        </div>
       </div>
-    </div>
-  ) : (
-    <Navigate to="/login" replace />
-  );
+    );
+  }
+
+  const team = posisi === "writer" || posisi === "image" || posisi === "video";
+
+  if (team) {
+    return (
+      <div className="flex">
+        <Sidebar />
+        <div className="w-full h-screen overflow-y-auto bg-[#F5F5F5]">
+          <Outlet />
+        </div>
+      </div>
+    );
+  }
+
+  return <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;
