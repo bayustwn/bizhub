@@ -1,28 +1,54 @@
+import { useEffect, useState } from "react";
 import Navbar from "../../../component/Navbar";
 import Status from "../../../component/status/Status";
 import { StatusModel } from "../../../models/task/status";
+import { Tugas } from "../../../models/task/task";
+import axios from "axios";
+import { useToken } from "../../../utils/Cookies";
+import TugasCard from "../../../component/card/TugasCard";
+import { useNavigate } from "react-router";
 
 function SemuaTugas() {
+  const [tugas, setTugas] = useState<Tugas[]>();
+  const navigate = useNavigate()
+  const { getToken } = useToken();
+
+  const ambilSemuaTugas = async () => {
+    await axios
+      .get(import.meta.env.VITE_BASE_URL + "/tugas", {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
+      })
+      .then((res) => {
+        setTugas(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    ambilSemuaTugas();
+  }, []);
+
   const status: StatusModel[] = [
     {
       status: "Dibuat",
-      value: 5,
+      value: 0,
     },
     {
       status: "Dikerjakan",
-      value: 5,
+      value: 0,
     },
     {
       status: "Ditinjau",
-      value: 5,
+      value: 0,
     },
     {
       status: "Revisi",
-      value: 5,
+      value: 0,
     },
     {
       status: "Selesai",
-      value: 5,
+      value: 0,
     },
   ];
 
@@ -32,27 +58,28 @@ function SemuaTugas() {
       <div className="flex gap-5 w-screen flex-row mt-10 overflow-y-auto pr-10">
         {status.map((data, index) => {
           return (
-            <div key={index} className="flex cursor-pointer flex-col gap-5 w-100">
-              <Status status={data.status} value={data.value} />
-              <div className="font-bold w-full flex flex-col gap-3 p-5 text-md  rounded-lg border-2">
-                <p>Judul Tugas </p>
-                <div className="flex flex-row gap-2 font-medium text-sm">
-                  <div className="bg-primary-200 p-2 rounded-md flex flex-row gap-1 text-primary">
-                    <img src="/assets/icons/task.svg" width={15} alt="tugas" />
-                    <p>12</p>
-                  </div>
-                  <div>
-                  <div className="bg-primary-200 p-2 rounded-md flex flex-row gap-1 text-primary">
-                    <img src="/assets/icons/clock.svg" width={15} alt="tugas" />
-                    <p>1 Jam 2 Menit</p>
-                  </div>
-                  </div>
-                </div>
-                <div className="flex flex-row items-center font-medium text-sm gap-2">
-                <img src="/assets/icons/user.svg" width={15} alt="user" />
-                <p>2+</p>
-                </div>
-              </div>
+            <div key={index} className="flex flex-col gap-5 w-100">
+              <Status
+                status={data.status}
+                value={
+                  tugas?.filter((tugas) => tugas.status == data.status)
+                    .length || 0
+                }
+              />
+              {tugas
+                ?.filter((tugas) => tugas.status == data.status)
+                .map((tugas, index) => {
+                  return (
+                    <TugasCard
+                      onClick={()=>navigate('/admin/tugas/' + tugas.id)}
+                      index={index}
+                      judul={tugas.judul}
+                      kuantitas={tugas.kuantitas}
+                      deadline={tugas.deadline}
+                      user={tugas.user_tugas.length}
+                    />
+                  );
+                })}
             </div>
           );
         })}

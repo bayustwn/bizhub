@@ -9,6 +9,7 @@ import Anggota from "./pages/admin/anggota/Anggota";
 import PerformaBulananAnggota from "./pages/admin/performa/Anggota/Anggota";
 import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
 import SemuaTugas from "./pages/admin/tugas/SemuaTugas";
+import TugasAnggota from "./pages/admin/tugas/TugasAnggota";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/admin/performa" element={<PerformaAnggota/>}/>
         <Route path="/admin/performa/anggota/:id" element={<PerformaBulananAnggota/>} />
         <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
+        <Route path="admin/tugas/:id" element={<TugasAnggota/>} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

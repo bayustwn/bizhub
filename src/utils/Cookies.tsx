@@ -16,5 +16,5 @@ export const useToken = () => {
     setCookies('session', '', { path: '/', expires: new Date(0) });
   };
 
-  return { getToken, setToken, removeToken };
+  return { getToken, setToken, removeToken};
 };
