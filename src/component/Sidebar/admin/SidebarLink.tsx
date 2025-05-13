@@ -14,7 +14,7 @@ function SidebarLink({to,text,icon,iconInactive,iconSize}: SidebarLinks) {
     const location = useLocation();
     const [prefix,setPrefix] = useState<boolean>()
   
-    const active = location.pathname === to ? "bg-primary-200 text-primary" : "";
+    const active = location.pathname.startsWith(to) ? "bg-primary-200 text-primary" : "";
 
     return (
         <Link

@@ -7,11 +7,33 @@ import axios from "axios";
 import { useToken } from "../../../utils/Cookies";
 import TugasCard from "../../../component/card/TugasCard";
 import { useNavigate } from "react-router";
+import ConfirmModal from "../../../component/modal/ConfirmModal";
+import toast from "react-hot-toast";
 
 function SemuaTugas() {
   const [tugas, setTugas] = useState<Tugas[]>();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { getToken } = useToken();
+  const [modal,setModal] = useState<boolean>(false);
+  const [id,setId] = useState<string>()
+
+  const konfirmasiHapus = (id:string) =>{
+    setId(id)
+    setModal(true)
+  }
+
+  const hapusTugas = async() =>{
+    await axios.delete(import.meta.env.VITE_BASE_URL + "/tugas/delete/" + id,{
+      headers : {
+        Authorization : "Bearer " + getToken()
+      }
+    }).then(async (res)=>{
+      await ambilSemuaTugas().then(()=>{
+        setModal(false)
+        toast.success(res.data.message)
+      })
+    })
+  }
 
   const ambilSemuaTugas = async () => {
     await axios
@@ -54,6 +76,7 @@ function SemuaTugas() {
 
   return (
     <div className="flex flex-col font-poppins gap-2">
+      <ConfirmModal confirmText="Hapus" title="Yakin ingin menghapus?" message="Data tugas tidak dapat dipulihkan setelah di hapus!" isOpen={modal} onCancel={()=>{setModal(false)}} onConfirm={()=>{hapusTugas()}} />
       <Navbar title="Semua Tugas" style="w-screen pr-10" />
       <div className="flex gap-5 w-screen flex-row mt-10 overflow-y-auto pr-10">
         {status.map((data, index) => {
@@ -71,12 +94,14 @@ function SemuaTugas() {
                 .map((tugas, index) => {
                   return (
                     <TugasCard
-                      onClick={()=>navigate('/admin/tugas/' + tugas.id)}
+                      admin={true}
+                      onClick={()=>navigate('/admin/semua-tugas/tugas/' + tugas.id)}
                       index={index}
                       judul={tugas.judul}
                       kuantitas={tugas.kuantitas}
                       deadline={tugas.deadline}
                       user={tugas.user_tugas.length}
+                      onDelete={()=>konfirmasiHapus(tugas.id) }
                     />
                   );
                 })}

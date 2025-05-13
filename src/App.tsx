@@ -20,7 +20,7 @@ function App() {
         <Route path="/admin/performa" element={<PerformaAnggota/>}/>
         <Route path="/admin/performa/anggota/:id" element={<PerformaBulananAnggota/>} />
         <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
-        <Route path="admin/tugas/:id" element={<TugasAnggota/>} />
+        <Route path="admin/semua-tugas/tugas/:id" element={<TugasAnggota/>} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

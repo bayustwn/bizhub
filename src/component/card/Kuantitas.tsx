@@ -4,7 +4,7 @@ interface KuantitasProps{
 
 function Kuantitas({kuantitas}: KuantitasProps) {
     return (
-        <div className="bg-primary-200 p-2 rounded-md flex flex-row gap-1 text-primary">
+        <div className="bg-primary-200 py-2 px-3 items-center rounded-md flex flex-row gap-2 text-primary">
           <img src="/assets/icons/task.svg" width={15} alt="tugas" />
           <p>{kuantitas}</p>
         </div>
