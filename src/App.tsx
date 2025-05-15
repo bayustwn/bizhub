@@ -9,6 +9,9 @@ import Anggota from "./pages/admin/anggota/Anggota";
 import PerformaBulananAnggota from "./pages/admin/performa/Anggota/Anggota";
 import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
 import SemuaTugas from "./pages/admin/tugas/SemuaTugas";
+import TugasAnggota from "./pages/admin/tugas/TugasAnggota";
+import EditTugas from "./pages/admin/tugas/EditTugas";
+import TambahTugas from "./pages/admin/tugas/TambahTugas";
 
 import TeamDashboard from "./pages/team/dashboard/Dashboard";
 import TeamTugas from "./pages/team/tugas/tugas";
@@ -26,14 +29,14 @@ function App() {
         <Route path="/admin/performa" element={<PerformaAnggota/>}/>
         <Route path="/admin/performa/anggota/:id" element={<PerformaBulananAnggota/>} />
         <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
-      
-
+         <Route path="admin/semua-tugas/tugas/:id" element={<TugasAnggota/>} />
+        <Route path="admin/semua-tugas/tugas/edit/:id" element={<EditTugas/>} />
+        <Route path="admin/semua-tugas/tugas/tambah" element={<TambahTugas/>} />
       {/* route team */}
         <Route path="/team/dashboard" element={<TeamDashboard />} />
         <Route path="/team/tugas" element={<TeamTugas />} />
         {/*<Route path="/team/tugas/:id" element={<DetailTugas />} />
         <Route path="/team/performa" element={<TeamPerforma />} />*/}
-
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

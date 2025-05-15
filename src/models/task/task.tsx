@@ -9,6 +9,7 @@ export interface Tugas {
   tanggal_dibuat?: Date;
   tanggal_diubah?: Date;
   terlambat: boolean;
+  user_tugas: User[]
 }
 
 export interface User {
