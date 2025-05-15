@@ -14,26 +14,28 @@ function SemuaTugas() {
   const [tugas, setTugas] = useState<Tugas[]>();
   const navigate = useNavigate();
   const { getToken } = useToken();
-  const [modal,setModal] = useState<boolean>(false);
-  const [id,setId] = useState<string>()
+  const [modal, setModal] = useState<boolean>(false);
+  const [id, setId] = useState<string>();
 
-  const konfirmasiHapus = (id:string) =>{
-    setId(id)
-    setModal(true)
-  }
+  const konfirmasiHapus = (id: string) => {
+    setId(id);
+    setModal(true);
+  };
 
-  const hapusTugas = async() =>{
-    await axios.delete(import.meta.env.VITE_BASE_URL + "/tugas/delete/" + id,{
-      headers : {
-        Authorization : "Bearer " + getToken()
-      }
-    }).then(async (res)=>{
-      await ambilSemuaTugas().then(()=>{
-        setModal(false)
-        toast.success(res.data.message)
+  const hapusTugas = async () => {
+    await axios
+      .delete(import.meta.env.VITE_BASE_URL + "/tugas/delete/" + id, {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
       })
-    })
-  }
+      .then(async (res) => {
+        await ambilSemuaTugas().then(() => {
+          setModal(false);
+          toast.success(res.data.message);
+        });
+      });
+  };
 
   const ambilSemuaTugas = async () => {
     await axios
@@ -76,13 +78,27 @@ function SemuaTugas() {
 
   return (
     <div className="flex flex-col font-poppins gap-2">
-      <div onClick={()=>{
-        navigate(location.pathname + "/tugas/tambah")
-      }} className="bg-primary-200 border-2 bottom-10 right-10 cursor-pointer border-primary flex flex-row items-center gap-5 py-3 px-5 text-primary font-bold absolute rounded-4xl">
+      <div
+        onClick={() => {
+          navigate(location.pathname + "/tugas/tambah");
+        }}
+        className="bg-primary-200 border-2 bottom-10 right-10 cursor-pointer border-primary flex flex-row items-center gap-5 py-3 px-5 text-primary font-bold absolute rounded-4xl"
+      >
         <p className="text-md">Tambah Tugas</p>
         <img width={15} src="/assets/icons/plus.svg" alt="add" />
       </div>
-      <ConfirmModal confirmText="Hapus" title="Yakin ingin menghapus?" message="Data tugas tidak dapat dipulihkan setelah di hapus!" isOpen={modal} onCancel={()=>{setModal(false)}} onConfirm={()=>{hapusTugas()}} />
+      <ConfirmModal
+        confirmText="Hapus"
+        title="Yakin ingin menghapus?"
+        message="Data tugas tidak dapat dipulihkan setelah di hapus!"
+        isOpen={modal}
+        onCancel={() => {
+          setModal(false);
+        }}
+        onConfirm={() => {
+          hapusTugas();
+        }}
+      />
       <Navbar title="Semua Tugas" style="w-screen pr-10" />
       <div className="flex gap-5 w-screen flex-row mt-10 overflow-y-auto pr-10">
         {status.map((data, index) => {
@@ -100,16 +116,21 @@ function SemuaTugas() {
                 .map((tugas, index) => {
                   return (
                     <TugasCard
+                      terlambat={tugas.terlambat}
                       key={index}
                       admin={true}
-                      onClick={()=>navigate(`${location.pathname}/tugas/` + tugas.id)}
+                      onClick={() =>
+                        navigate(`${location.pathname}/tugas/` + tugas.id)
+                      }
                       index={index}
                       judul={tugas.judul}
                       kuantitas={tugas.kuantitas}
                       deadline={tugas.deadline}
                       user={tugas.user_tugas.length}
-                      onDelete={()=>konfirmasiHapus(tugas.id) }
-                      onEdit={()=>navigate(`${location.pathname}/tugas/edit/` + tugas.id)}
+                      onDelete={() => konfirmasiHapus(tugas.id)}
+                      onEdit={() =>
+                        navigate(`${location.pathname}/tugas/edit/` + tugas.id)
+                      }
                     />
                   );
                 })}

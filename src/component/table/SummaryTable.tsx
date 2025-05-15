@@ -4,6 +4,7 @@ import { formatDate } from "../../utils/DateFormat";
 
 interface Data {
   data: Tugas[];
+  click?:(id:string)=>void;
 }
 
 createTheme('tables',{
@@ -31,6 +32,10 @@ const columns: TableColumn<Tugas>[] = [
               </div>;
       }else{
         switch (row.status) {
+          case "Dibuat":
+              return <div className="px-5 font-medium py-1 rounded-md w-28 text-center text-primary bg-primary-200">
+                <p>Dibuat</p>
+              </div>;
             case "Dikerjakan":
               return <div className="px-5 font-medium py-1  rounded-md w-28 text-center text-white bg-primary">
                 <p>Dikerjakan</p>
@@ -51,8 +56,8 @@ const columns: TableColumn<Tugas>[] = [
   },
 ];
 
-function SummaryTable({ data }: Data) {
-  return <DataTable theme="tables" highlightOnHover columns={columns} data={data} />;
+function SummaryTable({ data,click }: Data) {
+  return <DataTable pointerOnHover onRowClicked={(row)=>click? click(row.id) : {}} theme="tables" highlightOnHover columns={columns} data={data} />;
 }
 
 export default SummaryTable;

@@ -10,9 +10,11 @@ import DataTable, {
 } from "react-data-table-component";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { filterRange } from "../../../utils/FilterTugas";
+import { useNavigate } from "react-router";
 
 function Dashboard() {
   const { getToken } = useToken();
+  const navigate = useNavigate()
   const [tugas, setTugas] = useState<Tugas[]>();
   const [total, setTotal] = useState<Mingguan[]>();
 
@@ -104,9 +106,11 @@ function Dashboard() {
         <div className="flex-2 flex flex-col items-center p-6 bg-white border-1 border-black rounded-lg bg-primary">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Tugas Terbaru</p>
-            <More />
+            <div onClick={()=>navigate("/admin/semua-tugas")}>
+              <More />
+            </div>
           </div>
-          <SummaryTable data={filterRange(tugas!, 7)} />
+          <SummaryTable click={(id)=>navigate("/admin/semua-tugas/tugas/" + id)} data={filterRange(tugas!, 7)} />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">

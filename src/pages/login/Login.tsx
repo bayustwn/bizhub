@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Loading from "../../component/Loading";
@@ -10,43 +10,40 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const [isLoading, setIsLogin] = useState<boolean>(false);
-  const {getToken,setToken,getPosisi,setPosisi} = useToken()
-  
+  const { setToken, setPosisi } = useToken();
 
   const handleLogin = async () => {
     if (email && password) {
-        setIsLogin(true);
-        await axios
-          .post(import.meta.env.VITE_BASE_URL + "/auth/login", {
-            email,
-            password,
-          })
-          .then((res) => {
-            console.log("Response login:", res.data);
-        
-            const posisi = res.data.data.posisi;
-            const token = res.data.data.token;
+      setIsLogin(true);
+      await axios
+        .post(import.meta.env.VITE_BASE_URL + "/auth/login", {
+          email,
+          password,
+        })
+        .then((res) => {
+          const posisi = res.data.data.posisi.trim();
+          const token = res.data.data.token;
 
-            setToken(token);
-            setPosisi(posisi);
-          
-            if (posisi === "admin") {
-              navigate("/admin/dashboard");
-            } else {
-              navigate("/team/dashboard");
-            }
-          })
-          .catch((err) => {
-            toast.error(err.response.data?.message);
-          })
-          .finally(() => {
-            setIsLogin(false);
-          });
+          setToken(token);
+          setPosisi(posisi);
+
+          if (posisi === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/team/dashboard");
+          }
+        })
+        .catch((err) => {
+          toast.error(err.response.data?.message);
+        })
+        .finally(() => {
+          setIsLogin(false);
+        });
     } else {
       toast.error("Isi form dengan benar!");
     }
   };
-  
+
   return (
     <div className="justify-center font-poppins flex items-center h-screen w-screen">
       <div className="flex flex-col gap-3 w-1/4">

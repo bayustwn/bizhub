@@ -34,7 +34,7 @@ function EditTugas() {
           },
         }
       )
-      .then((res) => {
+      .then(() => {
         navigate('/admin/semua-tugas')
       });
   };

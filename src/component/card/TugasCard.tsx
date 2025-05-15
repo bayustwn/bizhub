@@ -6,6 +6,7 @@ interface TugasProps {
   judul: string;
   kuantitas: number;
   deadline: string;
+  terlambat:boolean;
   user: number;
   onClick: () => void;
   admin: boolean;
@@ -18,6 +19,7 @@ function TugasCard({
   judul,
   kuantitas,
   deadline,
+  terlambat,
   user,
   onClick,
   admin,
@@ -30,7 +32,7 @@ function TugasCard({
       key={index}
       className="font-bold transition-all w-full bg-white cursor-pointer  flex flex-col gap-3 p-5 text-lg  rounded-lg border-2"
     >
-      <p>{judul}</p>
+      <p className={terlambat? `text-red` :  `text-black`}>{judul}</p>
       <div className="flex flex-row gap-2 font-medium text-sm">
         <Kuantitas kuantitas={kuantitas} />
         <Deadline deadline={deadline} />
