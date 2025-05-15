@@ -11,6 +11,7 @@ import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
 import SemuaTugas from "./pages/admin/tugas/SemuaTugas";
 import TugasAnggota from "./pages/admin/tugas/TugasAnggota";
 import EditTugas from "./pages/admin/tugas/EditTugas";
+import TambahTugas from "./pages/admin/tugas/TambahTugas";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
         <Route path="admin/semua-tugas/tugas/:id" element={<TugasAnggota/>} />
         <Route path="admin/semua-tugas/tugas/edit/:id" element={<EditTugas/>} />
+        <Route path="admin/semua-tugas/tugas/tambah" element={<TambahTugas/>} />
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />

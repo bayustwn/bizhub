@@ -8,22 +8,32 @@ import { useToken } from "../../../utils/Cookies";
 import { useEffect, useState } from "react";
 import { Tugas, User } from "../../../models/task/task";
 import TextareaAutosize from "react-textarea-autosize";
+import toast from "react-hot-toast";
 
 registerLocale("id-ID", id);
 
-function EditTugas() {
-  const { id } = useParams();
+function TambahTugas() {
   const { getToken } = useToken();
-  const [detail, setDetail] = useState<Tugas>();
-  const [userTugas, setUserTugas] = useState<User[]>();
-  const [semuaAnggota, setSemuaAnggota] = useState<User[]>();
+  const [detail, setDetail] = useState<Tugas>({
+    id: "",
+    brief: "",
+    deadline: new Date().toISOString().split("T")[0],
+    id_admin: "",
+    judul: "",
+    kuantitas: 0,
+    status: "",
+    terlambat: false,
+    user_tugas: [],
+  });
+  const [userTugas, setUserTugas] = useState<User[]>([]);
+  const [semuaAnggota, setSemuaAnggota] = useState<User[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const editTugas = async () => {
+  const tambah = async () => {
     await axios
-      .put(
-        import.meta.env.VITE_BASE_URL + "/tugas/update/" + id,
+      .post(
+        import.meta.env.VITE_BASE_URL + "/tugas/add",
         {
           ...detail,
           user_tugas: userTugas,
@@ -35,20 +45,11 @@ function EditTugas() {
         }
       )
       .then((res) => {
-        navigate('/admin/semua-tugas')
-      });
-  };
-
-  const ambilTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas/detail/" + id, {
-        headers: {
-          Authorization: "Bearer " + getToken(),
-        },
+        console.log(res);
+        navigate("/admin/semua-tugas");
       })
-      .then((res) => {
-        setDetail(res.data.data.tugas);
-        setUserTugas(res.data.data.user_tugas);
+      .catch((err) => {
+        toast.error(err);
       });
   };
 
@@ -65,13 +66,8 @@ function EditTugas() {
   };
 
   useEffect(() => {
-    ambilTugas();
     anggota();
   }, []);
-
-  useEffect(() => {
-    setUserTugas(detail?.user_tugas);
-  }, [detail]);
 
   return (
     <div className="font-poppins flex flex-col">
@@ -82,21 +78,24 @@ function EditTugas() {
           src="/assets/icons/back.svg"
           alt="back"
         />
-        <Navbar title="Edit Tugas" />
+        <Navbar title="Tambah Tugas" />
       </div>
       <div className="flex justify-between items-center  w-full flex-row">
         <div className="my-5 font-medium px-5 py-1 rounded-4xl text-primary bg-primary-200 border-2 border-primary">
-          <p>{detail?.status}</p>
+          <p>Dibuat</p>
         </div>
-        <button onClick={()=>editTugas()} className="py-2 px-10 rounded-lg cursor-pointer font-semibold text-white bg-primary">
-          Edit
+        <button
+          onClick={() => tambah()}
+          className="py-2 px-10 rounded-lg cursor-pointer font-semibold text-white bg-primary"
+        >
+          Tambah
         </button>
       </div>
 
       <div className="w-full bg-white gap-3 flex flex-col auto p-8 border-2 border-black rounded-lg">
         <TextareaAutosize
           className="resize-none outline-none font-bold text-3xl"
-          value={detail?.judul}
+          placeholder="Judul Tugas"
           onChange={(e) =>
             setDetail((prev) => ({ ...prev!, judul: e.target.value }))
           }
@@ -109,6 +108,7 @@ function EditTugas() {
               inputMode="numeric"
               maxLength={10}
               pattern="[1-9]*"
+              placeholder="0"
               style={{ width: `${String(detail?.kuantitas || 0).length}ch` }}
               className="outline-none"
               value={detail?.kuantitas}
@@ -124,7 +124,8 @@ function EditTugas() {
             <div className="bg-primary-200 px-3 py-2 rounded-md flex flex-row gap-2 text-primary">
               <img src="/assets/icons/clock.svg" width={15} alt="tugas" />
               <DatePicker
-                selected={new Date(detail?.deadline || 12)}
+                placeholderText="Deadline Tugas"
+                selected={new Date(detail.deadline)}
                 onChange={(date) =>
                   setDetail((prev) => ({
                     ...prev!,
@@ -142,7 +143,7 @@ function EditTugas() {
         <div className="min-h-50 my-2 ">
           <TextareaAutosize
             className="font-medium outline-none w-full h-fit resize-none"
-            value={detail?.brief}
+            placeholder="Deskripsi serta brief singkat tugas."
             onChange={(e) =>
               setDetail((prev) => ({ ...prev!, brief: e.target.value }))
             }
@@ -215,4 +216,4 @@ function EditTugas() {
   );
 }
 
-export default EditTugas;
+export default TambahTugas;

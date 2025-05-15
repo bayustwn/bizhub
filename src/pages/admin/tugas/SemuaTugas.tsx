@@ -76,6 +76,12 @@ function SemuaTugas() {
 
   return (
     <div className="flex flex-col font-poppins gap-2">
+      <div onClick={()=>{
+        navigate(location.pathname + "/tugas/tambah")
+      }} className="bg-primary-200 border-2 bottom-10 right-10 cursor-pointer border-primary flex flex-row items-center gap-5 py-3 px-5 text-primary font-bold absolute rounded-4xl">
+        <p className="text-md">Tambah Tugas</p>
+        <img width={15} src="/assets/icons/plus.svg" alt="add" />
+      </div>
       <ConfirmModal confirmText="Hapus" title="Yakin ingin menghapus?" message="Data tugas tidak dapat dipulihkan setelah di hapus!" isOpen={modal} onCancel={()=>{setModal(false)}} onConfirm={()=>{hapusTugas()}} />
       <Navbar title="Semua Tugas" style="w-screen pr-10" />
       <div className="flex gap-5 w-screen flex-row mt-10 overflow-y-auto pr-10">
@@ -94,6 +100,7 @@ function SemuaTugas() {
                 .map((tugas, index) => {
                   return (
                     <TugasCard
+                      key={index}
                       admin={true}
                       onClick={()=>navigate(`${location.pathname}/tugas/` + tugas.id)}
                       index={index}
