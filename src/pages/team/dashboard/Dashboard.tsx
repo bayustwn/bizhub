@@ -55,7 +55,7 @@ function Dashboard() {
 
   const columns: TableColumn<Mingguan>[] = [
     {
-        name: "Nama",
+        name: "Tugas",
         selector: (row) => row.nama,
       },
       {

@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const [isLoading, setIsLogin] = useState<boolean>(false);
-  const {getToken,setToken} = useToken()
+  const {getToken,setToken,getPosisi,setPosisi} = useToken()
   
 
   const handleLogin = async () => {
@@ -22,10 +22,14 @@ function Login() {
             password,
           })
           .then((res) => {
+            console.log("Response login:", res.data);
+        
             const posisi = res.data.data.posisi;
-            setToken(res.data.data.token);
-            localStorage.setItem("posisi", posisi);
+            const token = res.data.data.token;
 
+            setToken(token);
+            setPosisi(posisi);
+          
             if (posisi === "admin") {
               navigate("/admin/dashboard");
             } else {
@@ -42,20 +46,7 @@ function Login() {
       toast.error("Isi form dengan benar!");
     }
   };
-
-  useEffect(() => {
-  const token = getToken();
-  const posisi = localStorage.getItem("posisi");
-
-  if (token && posisi) {
-    if (posisi === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/team/dashboard");
-    }
-  }
-}, [getToken(), navigate]);
-
+  
   return (
     <div className="justify-center font-poppins flex items-center h-screen w-screen">
       <div className="flex flex-col gap-3 w-1/4">

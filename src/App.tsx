@@ -11,6 +11,9 @@ import PerformaAnggota from "./pages/admin/performa/PerformaAnggota";
 import SemuaTugas from "./pages/admin/tugas/SemuaTugas";
 
 import TeamDashboard from "./pages/team/dashboard/Dashboard";
+import TeamTugas from "./pages/team/tugas/tugas";
+//import DetailTugas from "./pages/team/tugas/detailTugas";
+//import TeamPerforma from "./pages/team/performa/performa";
 
 function App() {
   return (
@@ -26,7 +29,10 @@ function App() {
       
 
       {/* route team */}
-      <Route path="/team/dashboard" element={<TeamDashboard />} />
+        <Route path="/team/dashboard" element={<TeamDashboard />} />
+        <Route path="/team/tugas" element={<TeamTugas />} />
+        {/*<Route path="/team/tugas/:id" element={<DetailTugas />} />
+        <Route path="/team/performa" element={<TeamPerforma />} />*/}
 
       </Route>
       <Route element={<AlreadyLogin/>}>

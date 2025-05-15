@@ -19,21 +19,23 @@ const Sidebar = () => {
       <img src="/assets/logo.png" className="w-25" alt="logo" />
       <nav className="flex-1 mt-8 flex flex-col gap-2 w-full">
         <SidebarLink
-          to="/admin/dashboard"
+          to="/team/dashboard"
           text="Dasbor"
           icon="/assets/icons/dashboard.svg"
-        />
-        <SidebarLink to="/" text="Semua Tugas" icon="/assets/icons/task.svg" />
-        <SidebarLink
-          to="/"
-          text="Anggota Tim"
-          icon="/assets/icons/user.svg"
-          iconSize="w-4"
+          iconInactive="/assets/icons/inactive/dashboard.svg"
         />
         <SidebarLink
-          to="/"
-          text="Performa Anggota"
+          to="/team/tugas"
+          text="Tugas Saya"
+          icon="/assets/icons/task.svg"
+          iconInactive="/assets/icons/inactive/task.svg"
+        />
+        <SidebarLink
+          to="/team/performa"
+          text="Performa"
           icon="/assets/icons/perform.svg"
+          iconInactive="/assets/icons/inactive/perform.svg"
+          iconSize="w-4"
         />
       </nav>
       <div
