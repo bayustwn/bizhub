@@ -95,13 +95,14 @@ function SemuaTugas() {
                   return (
                     <TugasCard
                       admin={true}
-                      onClick={()=>navigate('/admin/semua-tugas/tugas/' + tugas.id)}
+                      onClick={()=>navigate(`${location.pathname}/tugas/` + tugas.id)}
                       index={index}
                       judul={tugas.judul}
                       kuantitas={tugas.kuantitas}
                       deadline={tugas.deadline}
                       user={tugas.user_tugas.length}
                       onDelete={()=>konfirmasiHapus(tugas.id) }
+                      onEdit={()=>navigate(`${location.pathname}/tugas/edit/` + tugas.id)}
                     />
                   );
                 })}

@@ -5,7 +5,7 @@ import Deadline from "../../../component/card/Deadline";
 import axios from "axios";
 import { useToken } from "../../../utils/Cookies";
 import { useEffect, useState } from "react";
-import { Tugas } from "../../../models/task/task";
+import { Tugas, User } from "../../../models/task/task";
 
 function TugasAnggota() {
   const { id } = useParams();
@@ -61,14 +61,14 @@ function TugasAnggota() {
           </div>
         </div>
         <div className="flex flex-row text-primary font-medium gap-2">
-          {detail?.user_tugas.map((user: any, index) => {
+          {detail?.user_tugas.map((user: User, index) => {
             return (
               <div
                 key={index}
                 className="bg-primary-200 border-2 border-primary flex flex-row gap-2  rounded-4xl px-6 py-1"
               >
                 <img src="/assets/icons/user.svg" alt="user" width={12} />
-                <p>{user.user.nama}</p>
+                <p>{user.nama}</p>
               </div>
             );
           })}
