@@ -15,7 +15,8 @@ import EditTugas from "./pages/admin/tugas/EditTugas";
 import TambahTugas from "./pages/admin/tugas/TambahTugas";
 
 import TeamDashboard from "./pages/team/dashboard/Dashboard";
-import TeamTugas from "./pages/team/tugas/tugas";
+import TeamTugas from "./pages/team/tugas/TugasAnggota";
+import DetailTugas from "./pages/team/tugas/detailTugas";
 
 function App() {
   return (
@@ -36,7 +37,8 @@ function App() {
 
       <Route path="/team" element={<PrivateTeam />}>
         <Route path="dashboard" element={<TeamDashboard />} />
-        <Route path="tugas" element={<TeamTugas />} />
+        <Route path="semua-tugas" element={<TeamTugas />} />
+        <Route path="semua-tugas/tugas/:id" element={<DetailTugas />} />
       </Route>
 
       <Route element={<AlreadyLogin />}>
