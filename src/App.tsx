@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import Home from "./pages/home/Home";
-import Dashboard from "./pages/admin/dashboard/Dashboard";
+import AdminDashboard from "./pages/admin/dashboard/Dashboard";
 import Login from "./pages/login/Login";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -13,18 +13,30 @@ import TugasAnggota from "./pages/admin/tugas/TugasAnggota";
 import EditTugas from "./pages/admin/tugas/EditTugas";
 import TambahTugas from "./pages/admin/tugas/TambahTugas";
 
+import TeamDashboard from "./pages/team/dashboard/Dashboard";
+import TeamTugas from "./pages/team/tugas/tugas";
+//import DetailTugas from "./pages/team/tugas/detailTugas";
+//import TeamPerforma from "./pages/team/performa/performa";
+
 function App() {
   return (
+    
     <Routes>
+      {/* route admin */}
       <Route element={<PrivateRoute />}>
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/anggota" element={<Anggota />} />
         <Route path="/admin/performa" element={<PerformaAnggota/>}/>
         <Route path="/admin/performa/anggota/:id" element={<PerformaBulananAnggota/>} />
         <Route path="/admin/semua-tugas" element={<SemuaTugas/>} />
-        <Route path="admin/semua-tugas/tugas/:id" element={<TugasAnggota/>} />
+         <Route path="admin/semua-tugas/tugas/:id" element={<TugasAnggota/>} />
         <Route path="admin/semua-tugas/tugas/edit/:id" element={<EditTugas/>} />
         <Route path="admin/semua-tugas/tugas/tambah" element={<TambahTugas/>} />
+      {/* route team */}
+        <Route path="/team/dashboard" element={<TeamDashboard />} />
+        <Route path="/team/tugas" element={<TeamTugas />} />
+        {/*<Route path="/team/tugas/:id" element={<DetailTugas />} />
+        <Route path="/team/performa" element={<TeamPerforma />} />*/}
       </Route>
       <Route element={<AlreadyLogin/>}>
       <Route path="/login" element={<Login />} />
