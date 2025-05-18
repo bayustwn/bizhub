@@ -1,3 +1,9 @@
+export interface Bulanan extends User{
+  bulan: number,
+  tahun: number,
+  user_tugas: Tugas[]
+}
+
 export interface Tugas {
   id: string;
   brief: string;

@@ -16,7 +16,7 @@ import TambahTugas from "./pages/admin/tugas/TambahTugas";
 
 import TeamDashboard from "./pages/team/dashboard/Dashboard";
 import TeamTugas from "./pages/team/tugas/TugasAnggota";
-import DetailTugas from "./pages/team/tugas/detailTugas";
+import DetailTugas from "./pages/team/tugas/DetailTugas";
 
 function App() {
   return (

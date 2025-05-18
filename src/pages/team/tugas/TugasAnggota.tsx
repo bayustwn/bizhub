@@ -7,6 +7,8 @@ import { useToken } from "../../../utils/Cookies";
 import { Tugas } from "../../../models/task/task";
 import { useNavigate } from "react-router";
 import TugasCard from "../../../component/card/TugasCard";
+import {DndContext} from '@dnd-kit/core';
+
 
 function PenggunaTugas() {
   const [id, setId] = useState<string>();
@@ -56,14 +58,15 @@ function PenggunaTugas() {
   }, [id]);
 
   return (
-    <div className="flex flex-col font-poppins gap-2">
+    <div className="flex flex-col z-index-0 font-poppins gap-2">
       <Navbar
         id={(id) => setId(id)}
         title="Semua Tugas"
         style="w-screen pr-10"
       />
-      <div className="flex gap-5 w-screen flex-row mt-10 overflow-y-auto pr-10">
-        {status.map((data, index) => {
+      <DndContext>
+      <div className="flex gap-5 z-index-10 w-screen h-screen flex-row mt-10 pr-10">
+          {status.map((data, index) => {
           return (
             <div
               key={index}
@@ -81,8 +84,10 @@ function PenggunaTugas() {
                 .map((tugas, index) => {
                   return (
                     <TugasCard
+                    id={tugas.id}
                       terlambat={tugas.terlambat}
                       key={index}
+                      status={data.status}
                       admin={false}
                       onClick={() =>
                         navigate(`${location.pathname}/tugas/` + tugas.id)
@@ -99,6 +104,7 @@ function PenggunaTugas() {
           );
         })}
       </div>
+      </DndContext>
     </div>
   );
 }
