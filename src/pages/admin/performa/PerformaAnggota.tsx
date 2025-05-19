@@ -87,6 +87,8 @@ function PerformaAnggota() {
           <DataTable
             highlightOnHover
             theme="tables"
+            pointerOnHover
+            onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
             columns={columns}
             data={
               anggotaTim
@@ -99,6 +101,8 @@ function PerformaAnggota() {
           <DataTable
             highlightOnHover
             theme="tables"
+            pointerOnHover
+            onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
             columns={columns}
             data={
               anggotaTim
@@ -110,6 +114,7 @@ function PerformaAnggota() {
         <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
           <DataTable
             highlightOnHover
+            pointerOnHover
             onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
             theme="tables"
             columns={columns}

@@ -17,6 +17,8 @@ import TambahTugas from "./pages/admin/tugas/TambahTugas";
 import TeamDashboard from "./pages/team/dashboard/Dashboard";
 import TeamTugas from "./pages/team/tugas/TugasAnggota";
 import DetailTugas from "./pages/team/tugas/DetailTugas";
+import SemuaTugasAnggota from "./pages/admin/performa/Anggota/semua-tugas/TugasAnggota";
+import TugasTerlambat from "./pages/admin/performa/Anggota/terlambat/TugasTerlambat";
 
 function App() {
   return (
@@ -28,6 +30,14 @@ function App() {
         <Route
           path="performa/anggota/:id"
           element={<PerformaBulananAnggota />}
+        />
+        <Route
+          path="performa/anggota/semua-tugas/:bulan/:tahun/:id"
+          element={<SemuaTugasAnggota />}
+        />
+        <Route
+          path="performa/anggota/semua-tugas/terlambat/:bulan/:tahun/:id"
+          element={<TugasTerlambat />}
         />
         <Route path="semua-tugas" element={<SemuaTugas />} />
         <Route path="semua-tugas/tugas/:id" element={<TugasAnggota />} />

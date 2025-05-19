@@ -134,7 +134,7 @@ function Anggota() {
         <div className="flex-1 flex flex-col items-center p-6 bg-white border-1 border-black rounded-lg bg-primary">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Semua Tugas</p>
-            <div onClick={() => navigate("/admin/semua-tugas")}>
+            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
               <More />
             </div>
           </div>
@@ -146,13 +146,15 @@ function Anggota() {
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Tugas Terlambat</p>
-            <More />
+            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/terlambat/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
+              <More />
+            </div>
           </div>
           <SummaryTable
             click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
             data={
               bulnanan?.user_tugas.filter(
-                (tugas) => tugas.status == "Terlambat"
+                (tugas) => tugas.terlambat
               )!
             }
           />
