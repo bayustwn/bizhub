@@ -49,7 +49,7 @@ function Dashboard() {
 
   const tugasTerlambat = (): number => {
     let terbaru: number = tugas
-      ? tugas.filter((data) => data.terlambat == true).length
+      ? tugas.filter((data) => data.terlambat).length
       : 0;
     return terbaru;
   };
