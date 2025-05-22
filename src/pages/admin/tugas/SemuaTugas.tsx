@@ -9,7 +9,14 @@ import TugasCard from "../../../component/card/TugasCard";
 import { useNavigate } from "react-router";
 import ConfirmModal from "../../../component/modal/ConfirmModal";
 import toast from "react-hot-toast";
-import { closestCenter, closestCorners, DndContext, useDroppable } from "@dnd-kit/core";
+import {
+  closestCorners,
+  DndContext,
+  useDroppable,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
 function SemuaTugas() {
   const [tugas, setTugas] = useState<Tugas[]>([]);
@@ -21,6 +28,25 @@ function SemuaTugas() {
   const konfirmasiHapus = (id: string) => {
     setId(id);
     setModal(true);
+  };
+
+  const updateStatus = async (id: string, status: string) => {
+    await axios
+      .put(
+        import.meta.env.VITE_BASE_URL + "/tugas/update/status",
+        {
+          id: id,
+          status: status,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + getToken(),
+          },
+        }
+      )
+      .then(() => {
+        ambilSemuaTugas();
+      });
   };
 
   const hapusTugas = async () => {
@@ -62,6 +88,15 @@ function SemuaTugas() {
     { status: "Selesai", value: 0 },
   ];
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    })
+  );
+
   return (
     <div className="flex flex-col font-poppins gap-2">
       <div
@@ -85,61 +120,90 @@ function SemuaTugas() {
 
       <div className="flex gap-5 h-screen w-screen flex-row mt-10 pr-10">
         <DndContext
+          sensors={sensors}
           collisionDetection={closestCorners}
-          onDragEnd={(e) => console.log("Drag end event:", e)}
+          onDragEnd={(e) => {
+            if(e.active.data.current?.status != e.over?.id){
+              const index = tugas.findIndex(
+              (tugas) => tugas.id === e.active.id.toString()
+            );
+            const newTugas = [...tugas];
+            newTugas[index].status = e.over?.id.toString() || "";
+            newTugas[index].tanggal_diubah = new Date()
+            setTugas(newTugas);
+            updateStatus(e.active.id.toString(), e.over?.id.toString() || "");
+            }
+          }}
         >
           {status.map((data) => {
-            const { setNodeRef, isOver } = useDroppable({ id: data.status });
-
-            return (
-              <div
-                key={data.status}
-                className="flex flex-col gap-5 w-100"
-              >
-                <Status
-                  status={data.status}
-                  value={
-                    tugas?.filter((tugas) => tugas.status === data.status)
-                      .length || 0
-                  }
-                />
-                <div
-                  ref={setNodeRef}
-                  id={data.status}
-                  className={`min-h-[200px] transition-all duration-200 p-2 rounded-xl ${
-                    isOver
-                      ? "bg-blue-50 border-2 border-blue-500"
-                      : "bg-gray-50"
-                  }`}
-                >
-                  {tugas
-                    ?.filter((tugasItem) => tugasItem.status === data.status)
-                    .map((tugasItem) => (
-                      <TugasCard
-                        key={tugasItem.id}
-                        id={tugasItem.id}
-                        terlambat={tugasItem.terlambat}
-                        admin={true}
-                        status={tugasItem.status}
-                        onClick={() =>
-                          navigate(`${location.pathname}/tugas/` + tugasItem.id)
-                        }
-                        index={0}
-                        judul={tugasItem.judul}
-                        kuantitas={tugasItem.kuantitas}
-                        deadline={tugasItem.deadline}
-                        user={tugasItem.user_tugas.length}
-                        onDelete={() => konfirmasiHapus(tugasItem.id)}
-                        onEdit={() =>
-                          navigate(
-                            `${location.pathname}/tugas/edit/` + tugasItem.id
-                          )
-                        }
-                      />
-                    ))}
+            const TugasColumn = ({ status }: { status: string }) => {
+              const { setNodeRef, isOver, active } = useDroppable({
+                id: status,
+              });
+              return (
+                <div key={status} className={`flex flex-col gap-5 w-100`}>
+                  <Status
+                    style={`${isOver? "border-primary" : "border-black"}`}
+                    status={status}
+                    value={
+                      tugas?.filter((tugas) => tugas.status === status)
+                        .length || 0
+                    }
+                  />
+                  <div
+                    ref={setNodeRef}
+                    id={status}
+                    className={`min-h-[200px] transition-all duration-200 p-2 rounded-xl`}
+                  >
+                    {tugas
+                      .sort((a, b) => {
+                        const tanggalA = a.tanggal_diubah
+                          ? new Date(a.tanggal_diubah).getTime()
+                          : 0;
+                        const tanggalB = b.tanggal_diubah
+                          ? new Date(b.tanggal_diubah).getTime()
+                          : 0;
+                        return tanggalA - tanggalB;
+                      })
+                      ?.filter((tugasItem) => tugasItem.status === status)
+                      .map((tugasItem) => {
+                        const isDragging = active?.id === tugasItem.id;
+                        return (
+                          <TugasCard
+                            key={tugasItem.id}
+                            id={tugasItem.id}
+                            terlambat={tugasItem.terlambat}
+                            admin={true}
+                            status={tugasItem.status}
+                            onClick={() =>
+                              navigate(
+                                `${location.pathname}/tugas/` + tugasItem.id
+                              )
+                            }
+                            index={0}
+                            judul={tugasItem.judul}
+                            kuantitas={tugasItem.kuantitas}
+                            deadline={tugasItem.deadline}
+                            user={tugasItem.user_tugas.length}
+                            onDelete={() => konfirmasiHapus(tugasItem.id)}
+                            onEdit={() =>
+                              navigate(
+                                `${location.pathname}/tugas/edit/` +
+                                  tugasItem.id
+                              )
+                            }
+                            style={`transition-all ${
+                              isDragging ? "border-primary" : "border-black"
+                            }`}
+                          />
+                        );
+                      })}
+                  </div>
                 </div>
-              </div>
-            );
+              );
+            };
+
+            return <TugasColumn key={data.status} status={data.status} />;
           })}
         </DndContext>
       </div>

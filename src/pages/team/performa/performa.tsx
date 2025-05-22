@@ -7,6 +7,7 @@ import { useToken } from "../../../utils/Cookies";
 import { Bulanan } from "../../../models/task/task";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { useNavigate } from "react-router";
+import KomponenGrafikBulanan from "../../../component/chart/KomponenGrafikBulanan";
 
 function Performa() {
   const { getToken } = useToken();
@@ -104,6 +105,7 @@ function Performa() {
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
           <div className="flex font-bold flex-col flex-2">
             <p>Total Tugas</p>
+            <KomponenGrafikBulanan tugas={bulnanan?.user_tugas || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter

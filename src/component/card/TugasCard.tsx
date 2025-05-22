@@ -3,7 +3,7 @@ import Kuantitas from "./Kuantitas";
 import { useDraggable } from "@dnd-kit/core";
 
 interface TugasProps {
-  id:string,
+  id: string;
   index: number;
   judul: string;
   kuantitas: number;
@@ -14,7 +14,8 @@ interface TugasProps {
   admin: boolean;
   onDelete?: () => void;
   onEdit?: () => void;
-  status:string;
+  status: string;
+  style?: string;
 }
 
 function TugasCard({
@@ -30,16 +31,20 @@ function TugasCard({
   admin,
   onDelete,
   onEdit,
+  style,
 }: TugasProps) {
-  const { attributes, listeners, setNodeRef, transform } =
-    useDraggable({
-      id: id,data:{
-        status 
-      }
-    });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: id,
+    data: {
+      status,
+    },
+  });
 
   return (
     <div
+      onPointerDown={(e) => {
+        e.stopPropagation();
+      }}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
@@ -51,7 +56,7 @@ function TugasCard({
       }}
       onClick={onClick}
       key={index}
-      className="font-bold transition-all w-full bg-white cursor-pointer  flex flex-col gap-3 p-5 text-lg  rounded-lg border-2"
+      className={`mb-5 font-bold transition-all w-full bg-white cursor-pointer  flex flex-col gap-3 p-5 text-lg  rounded-lg border-2 ${style}`}
     >
       <p className={terlambat ? `text-red` : `text-black`}>{judul}</p>
       <div className="flex flex-row gap-2 font-medium text-sm">

@@ -7,16 +7,20 @@ import { useToken } from "../../../../utils/Cookies";
 import { Bulanan } from "../../../../models/task/task";
 import SummaryTable from "../../../../component/table/SummaryTable";
 import { useNavigate, useParams } from "react-router";
+import KomponenGrafikBulanan from "../../../../component/chart/KomponenGrafikBulanan";
 
 function Anggota() {
   const { id } = useParams();
   const { getToken } = useToken();
   const navigate = useNavigate();
   const [bulnanan, setBulanan] = useState<Bulanan>();
-  const [bulanTahun,setBulanTahun] = useState<{bulan:number,tahun:number}>({
-    bulan : new Date().getMonth()+1,
+  const [bulanTahun, setBulanTahun] = useState<{
+    bulan: number;
+    tahun: number;
+  }>({
+    bulan: new Date().getMonth() + 1,
     tahun: new Date().getFullYear(),
-  })
+  });
 
   const listBulan = [
     { value: 1, label: "Januari" },
@@ -64,9 +68,9 @@ function Anggota() {
     return terbaru;
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getTugas();
-  },[bulanTahun])
+  }, [bulanTahun]);
 
   return (
     <div className="flex gap-5 font-poppins flex-col">
@@ -81,9 +85,13 @@ function Anggota() {
       </div>
       <div className="flex flex-row gap-3">
         <div className="cursor-pointer self-start font-medium px-5 py-1 rounded-4xl text-primary bg-primary-200 border-2 border-primary">
-          <select className="outline-none" value={bulanTahun.bulan} onChange={(e)=>{
-            setBulanTahun({...bulanTahun, bulan: Number(e.target.value)})
-          }}>
+          <select
+            className="outline-none"
+            value={bulanTahun.bulan}
+            onChange={(e) => {
+              setBulanTahun({ ...bulanTahun, bulan: Number(e.target.value) });
+            }}
+          >
             {Array.from(listBulan, (bulan, i) => {
               return (
                 <option key={i} value={bulan.value}>
@@ -94,7 +102,12 @@ function Anggota() {
           </select>
         </div>
         <div className="cursor-pointer self-start font-medium px-5 py-1 rounded-4xl text-primary bg-primary-200 border-2 border-primary">
-          <select className="outline-none" onChange={(e)=>setBulanTahun({...bulanTahun, tahun: Number(e.target.value)})}>
+          <select
+            className="outline-none"
+            onChange={(e) =>
+              setBulanTahun({ ...bulanTahun, tahun: Number(e.target.value) })
+            }
+          >
             {Array.from({ length: 30 }, (_, i) => {
               const year = new Date().getFullYear() - i;
               return (
@@ -110,6 +123,7 @@ function Anggota() {
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
           <div className="flex font-bold flex-col flex-2">
             <p>Total Tugas</p>
+            <KomponenGrafikBulanan tugas={bulnanan?.user_tugas || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter
@@ -134,7 +148,14 @@ function Anggota() {
         <div className="flex-1 flex flex-col items-center p-6 bg-white border-1 border-black rounded-lg bg-primary">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Semua Tugas</p>
-            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
+            <div
+              onClick={() =>
+                navigate(
+                  "/admin/performa/anggota/semua-tugas/" +
+                    `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`
+                )
+              }
+            >
               <More />
             </div>
           </div>
@@ -146,17 +167,20 @@ function Anggota() {
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Tugas Terlambat</p>
-            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/terlambat/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
+            <div
+              onClick={() =>
+                navigate(
+                  "/admin/performa/anggota/semua-tugas/terlambat/" +
+                    `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`
+                )
+              }
+            >
               <More />
             </div>
           </div>
           <SummaryTable
             click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
-            data={
-              bulnanan?.user_tugas.filter(
-                (tugas) => tugas.terlambat
-              )!
-            }
+            data={bulnanan?.user_tugas.filter((tugas) => tugas.terlambat)!}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import { formatDate } from "../../utils/DateFormat";
 interface Data {
   data: Tugas[];
   click?: (id: string) => void;
-  column?: TableColumn<any>[] 
+  column?: TableColumn<any>[];
 }
 
 createTheme("tables", {
@@ -21,9 +21,13 @@ const columns: TableColumn<Tugas>[] = [
   {
     name: "Judul",
     selector: (row) => `${row.kuantitas} ${row.judul}`,
-    cell : (row)=>{
-      return <p className={row.terlambat? `text-red font-bold` : `text-black` }>{row.judul}</p>
-    }
+    cell: (row) => {
+      return (
+        <p className={row.terlambat ? `text-red font-bold` : `text-black`}>
+          {row.judul}
+        </p>
+      );
+    },
   },
   {
     name: "Tenggat",
@@ -56,8 +60,14 @@ const columns: TableColumn<Tugas>[] = [
 
         case "Revisi":
           return (
-            <div className="px-5 py-1 font-medium rounded-md w-28 text-center  bg-yellow text-black">
+            <div className="px-5 py-1 font-medium rounded-md w-28 text-center bg-yellow text-black">
               <p>Revisi</p>
+            </div>
+          );
+        case "Ditinjau":
+          return (
+            <div className="px-5 py-1 font-medium rounded-md w-28 text-center bg-yellow text-black">
+              <p>Ditinjau</p>
             </div>
           );
       }
@@ -65,14 +75,14 @@ const columns: TableColumn<Tugas>[] = [
   },
 ];
 
-function SummaryTable({ data, click,column }: Data) {
+function SummaryTable({ data, click, column }: Data) {
   return (
     <DataTable
       pointerOnHover
       onRowClicked={(row) => (click ? click(row.id) : {})}
       theme="tables"
       highlightOnHover
-      columns={column? column : columns}
+      columns={column ? column : columns}
       data={data}
     />
   );

@@ -8,6 +8,7 @@ import { Tugas } from "../../../models/task/task";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { filterRange } from "../../../utils/FilterTugas";
 import { useNavigate } from "react-router";
+import KomponenGrafikMingguan from "../../../component/chart/KomponenGrafikMingguan";
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -53,6 +54,7 @@ function Dashboard() {
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
           <div className="flex font-bold flex-col flex-2">
             <p>Total Tugas Mingguan</p>
+            <KomponenGrafikMingguan tugas={tugas || []} />
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter
