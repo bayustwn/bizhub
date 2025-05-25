@@ -1,4 +1,8 @@
 import { Route, Routes } from "react-router";
+import { useEffect } from "react";
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging  } from "./firebase/fireBaseConfig";
+
 import Home from "./pages/home/Home";
 import AdminDashboard from "./pages/admin/dashboard/Dashboard";
 import Login from "./pages/login/Login";
@@ -22,6 +26,32 @@ import TugasTerlambat from "./pages/admin/performa/Anggota/terlambat/TugasTerlam
 import Performa from "./pages/team/performa/Performa";
 
 function App() {
+
+async function requestPermission() {
+  const permission = await Notification.requestPermission();
+
+ if (permission === "denied") {
+    alert("Notifikasi ditolak. Silakan aktifkan notifikasi di pengaturan browser Anda.");
+  }
+
+  onMessage(messaging, (payload) => {
+
+      const { title, body } = payload.notification || {};
+
+      if (Notification.permission === "granted") {
+        new Notification(title!, {
+          body: body,
+          icon: "../public/assets/logo.png", 
+        });
+      }
+    });
+
+}
+
+useEffect(() => {
+  requestPermission();
+}, []);
+
   return (
     <Routes>
       <Route path="/admin" element={<PrivateAdmin />}>
@@ -50,7 +80,7 @@ function App() {
         <Route path="dashboard" element={<TeamDashboard />} />
         <Route path="semua-tugas" element={<TeamTugas />} />
         <Route path="semua-tugas/tugas/:id" element={<DetailTugas />} />
-        <Route path="performa" element={<Performa/>} />
+        <Route path="performa" element={<Performa />} />
       </Route>
 
       <Route element={<AlreadyLogin />}>

@@ -4,13 +4,16 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Loading from "../../component/Loading";
 import { useToken } from "../../utils/Cookies";
+import { getToken } from "firebase/messaging";
+import { messaging } from "../../firebase/fireBaseConfig";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const [isLoading, setIsLogin] = useState<boolean>(false);
-  const { setToken, setPosisi } = useToken();
+  const { setToken } = useToken();
 
   const handleLogin = async () => {
     if (email && password) {
@@ -20,14 +23,22 @@ function Login() {
           email,
           password,
         })
-        .then((res) => {
-          const posisi = res.data.data.posisi.trim();
+        .then(async (res) => {
+
           const token = res.data.data.token;
-
+          const jwt: any = jwtDecode(token);
           setToken(token);
-          setPosisi(posisi);
 
-          if (posisi === "admin") {
+          const token_notif = await getToken(messaging, {
+            vapidKey: import.meta.env.VITE_APP_VAPID_KEY,
+          });
+
+          axios.post(import.meta.env.VITE_BASE_URL + "/notif/tambah", {
+            token: token_notif,
+            id_user: jwt.id,
+          })
+
+          if (jwt.posisi === "admin") {
             navigate("/admin/dashboard");
           } else {
             navigate("/team/dashboard");
