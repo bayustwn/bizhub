@@ -23,7 +23,6 @@ function Dashboard() {
         headers: { Authorization: "Bearer " + getToken() },
       })
       .then((res) => {
-        console.log(res.data.data)
         setTugas(res.data.data);
       });
   };
@@ -115,7 +114,7 @@ function Dashboard() {
           </div>
           <SummaryTable
             click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
-            data={filterRange(tugas!, 7)}
+            data={filterRange(tugas!, 7).splice(0, 5)}
           />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">

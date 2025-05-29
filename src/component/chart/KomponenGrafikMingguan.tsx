@@ -8,6 +8,7 @@ interface tugas{
 }
 
 function KomponenGrafikMingguan({tugas}:tugas) {
+
     return(
         <LineChart height={250} width={650} margin={{ top: 20, right: 20, bottom: 20, left: 20 }} data={grafikMingguan(tugas,7)}>
                 <Line strokeWidth={3} dot={{fill: '#DD460B',r: 4,stroke: "#DD460B"}} activeDot={{fill: '#DD460B',r: 7,stroke: "#DD460B"}} type="monotone" dataKey="nilai" stroke="#FFD7CB" />

@@ -23,7 +23,8 @@ function Dashboard() {
       })
       .then((res) => {
         setTugas(res.data.data);
-        console.log(res.data.data);
+        console.log(res.data);
+        console.log(id)
       });
   };
 
@@ -85,7 +86,7 @@ function Dashboard() {
               <More />
             </div>
           </div>
-          <SummaryTable click={(id)=>navigate("/team/semua-tugas/tugas/" + id) } data={filterRange(tugas!, 7)} />
+          <SummaryTable click={(id)=>navigate("/team/semua-tugas/tugas/" + id) } data={filterRange(tugas!, 7).splice(0,5)} />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
@@ -94,7 +95,7 @@ function Dashboard() {
               <More />
             </div>
           </div>
-          <SummaryTable click={(id)=>navigate("/team/semua-tugas/tugas/" + id) } data={filterRange(tugas!, 7).filter((tugas)=>tugas.status == "Revisi")} />
+          <SummaryTable click={(id)=>navigate("/team/semua-tugas/tugas/" + id) } data={filterRange(tugas!, 7).filter((tugas)=>tugas.status == "Revisi").splice(0,5)} />
         </div>
       </div>
     </div>

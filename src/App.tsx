@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import { useEffect } from "react";
-import { getToken, onMessage } from "firebase/messaging";
+import { onMessage } from "firebase/messaging";
 import { messaging  } from "./firebase/fireBaseConfig";
 
 import Home from "./pages/home/Home";
@@ -33,7 +33,7 @@ async function requestPermission() {
  if (permission === "denied") {
     alert("Notifikasi ditolak. Silakan aktifkan notifikasi di pengaturan browser Anda.");
   }
-
+  
   onMessage(messaging, (payload) => {
 
       const { title, body } = payload.notification || {};
@@ -41,7 +41,7 @@ async function requestPermission() {
       if (Notification.permission === "granted") {
         new Notification(title!, {
           body: body,
-          icon: "../public/assets/logo.png", 
+          icon: "/assets/logo.png", 
         });
       }
     });
