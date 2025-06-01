@@ -1,13 +1,14 @@
-import { useNavigate, useParams } from "react-router";
+import { data, useNavigate, useParams } from "react-router";
 import Navbar from "../../../component/Navbar";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { id } from "date-fns/locale/id";
 import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
-import { useEffect, useState } from "react";
-import { Tugas, User } from "../../../models/task/task";
+import { useEffect, useRef, useState } from "react";
+import { Files, Tugas, User } from "../../../models/task/task";
 import TextareaAutosize from "react-textarea-autosize";
+import toast from "react-hot-toast";
 
 registerLocale("id-ID", id);
 
@@ -16,13 +17,61 @@ function EditTugas() {
   const { getToken } = useToken();
   const [detail, setDetail] = useState<Tugas>();
   const [userTugas, setUserTugas] = useState<User[]>();
+  const [files, setFiles] = useState<Files[]>();
+  const [deletedFiles, setDeletedFiles] = useState<string[]>();
+  const [uploadedFiles, setUploadedFiles] = useState<FileList>();
   const [semuaAnggota, setSemuaAnggota] = useState<User[]>();
+  const ref = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const editTugas = async () => {
+  const upFile = () => {
+    ref.current?.click();
+  };
+
+  const unggahFile = async () => {
+    const formData = new FormData();
+    for (let i = 0; i < (uploadedFiles?.length || 0); i++) {
+      formData.append("file", uploadedFiles![i] as File);
+    }
+    formData.append("id_tugas", detail?.id || ("" as string));
+
     await api
-      .put("/tugas/update/" + id,
+      .post("/files/upload", formData, {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
+      })
+      .catch(() => {
+        toast.error("Gagal mengunggah file");
+      });
+  };
+
+  const removeFile = async()=>{
+    await api.delete("/files/delete/" + id,{
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
+      data: {
+        files: deletedFiles
+      }
+    }).catch(() => {
+      toast.error("Gagal menghapus file");
+    })
+  }
+
+  const editTugas = async () => {
+    if ((uploadedFiles?.length || 0) > 0) {
+      unggahFile();
+    }
+
+    if (deletedFiles?.length) {
+      removeFile();
+    }
+
+    await api
+      .put(
+        "/tugas/update/" + id,
         {
           ...detail,
           user_tugas: userTugas,
@@ -34,7 +83,7 @@ function EditTugas() {
         }
       )
       .then(() => {
-        navigate('/admin/semua-tugas')
+        navigate("/admin/semua-tugas");
       });
   };
 
@@ -46,6 +95,7 @@ function EditTugas() {
         },
       })
       .then((res) => {
+        setFiles(res.data.data.tugas.file);
         setDetail(res.data.data.tugas);
         setUserTugas(res.data.data.user_tugas);
       });
@@ -87,7 +137,10 @@ function EditTugas() {
         <div className="my-5 font-medium px-5 py-1 rounded-4xl text-primary bg-primary-200 border-2 border-primary">
           <p>{detail?.status}</p>
         </div>
-        <button onClick={()=>editTugas()} className="py-2 px-10 rounded-lg cursor-pointer font-semibold text-white bg-primary">
+        <button
+          onClick={() => editTugas()}
+          className="py-2 px-10 rounded-lg cursor-pointer font-semibold text-white bg-primary"
+        >
           Edit
         </button>
       </div>
@@ -110,7 +163,7 @@ function EditTugas() {
               pattern="[1-9]*"
               style={{ width: `${String(detail?.kuantitas || 0).length}ch` }}
               className="outline-none"
-              value={detail?.kuantitas}
+              value={detail?.kuantitas || ""}
               onChange={(e) =>
                 setDetail((prev) => ({
                   ...prev!,
@@ -148,13 +201,57 @@ function EditTugas() {
           />
         </div>
         <div className="border-1 border-black/20" />
-        <div className="flex flex-row text-black font-medium gap-2">
-          <div className="border-2 border-black flex flex-row gap-2 rounded-4xl px-6 py-1">
-            <img src="/assets/icons/file.svg" alt="user" width={13} />
-            <p>Script Image</p>
+        <div className="flex flex-row flex-wrap text-black font-medium gap-2">
+          {files?.map((file, index) => {
+            return (
+              <div className="relative" key={file.id}>
+                <div
+                  onClick={() => window.open(file.url, "_blank")}
+                  className="border-2 cursor-pointer border-black flex flex-row gap-2 rounded-4xl px-6 py-1"
+                >
+                  <img src="/assets/icons/file.svg" alt="user" width={13} />
+                  <p>{file.nama}</p>
+                </div>
+                <div
+                  onClick={() => {
+                    const updatedFiles = [...files];
+                    updatedFiles.splice(index, 1);
+                    setFiles(updatedFiles);
+                    setDeletedFiles((prev) => [...(prev || []), file.nama_file]);
+                  }}
+                  className="cursor-pointer absolute p-1 rounded-4xl -top-1 -right-1 bg-red flex items-center justify-center"
+                >
+                  <img src="/assets/icons/cross.svg" width={10} alt="cross" />
+                </div>
+              </div>
+            );
+          })}
+          <div className="cursor-pointer border-2 border-black flex items-center justify-center py-3 px-3 rounded-4xl">
+            <img
+              onClick={upFile}
+              src="/assets/icons/inactive/plus.svg"
+              alt="user"
+              width={12}
+            />
+            <input
+              ref={ref}
+              type="file"
+              onChange={(e) => {
+                const fileBaru: Files = {
+                  id: "",
+                  nama: e.target.files![0].name,
+                  nama_file: e.target.files![0].name,
+                  url: "",
+                };
+                setFiles((prev) => [...(prev || []), fileBaru]);
+                setUploadedFiles(e.target.files!);
+              }}
+              className="hidden"
+              multiple
+            />
           </div>
         </div>
-        <div className="flex flex-row items-center text-primary font-medium gap-2">
+        <div className="flex flex-row flex-wrap items-center text-primary font-medium gap-2">
           {userTugas?.map((user: User, index) => {
             return (
               <div

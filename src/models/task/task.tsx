@@ -15,7 +15,15 @@ export interface Tugas {
   tanggal_dibuat?: Date;
   tanggal_diubah?: Date;
   terlambat: boolean;
-  user_tugas: User[]
+  user_tugas: User[];
+  file: Files[]
+}
+
+export interface Files{
+  id: string;
+  nama: string;
+  nama_file: string;
+  url: string;
 }
 
 export interface User {
