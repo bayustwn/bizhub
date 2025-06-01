@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../../utils/Api";
 import Counter from "../../../component/card/Counter";
 import More from "../../../component/card/More";
 import Navbar from "../../../component/Navbar";
@@ -35,9 +35,8 @@ function Performa() {
   ];
 
   const getTugas = async () => {
-    await axios
-      .post(
-        import.meta.env.VITE_BASE_URL + "/user/bulanan/" + id,
+    await api
+      .post("/user/bulanan/" + id,
         {
           bulan: bulanTahun.bulan,
           tahun: bulanTahun.tahun,

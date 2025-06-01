@@ -1,6 +1,6 @@
 import { Line, LineChart, Tooltip, XAxis } from "recharts";
 import CustomTooltip from "./CustomTooltip";
-import grafikBulanan from "../../pages/admin/tugas/GrafikBulanan";
+import grafikBulanan from "../../utils/GrafikBulanan";
 import { Tugas } from "../../models/task/task";
 
 interface Bulanan {

@@ -1,7 +1,7 @@
 import { Line, LineChart, Tooltip, XAxis } from "recharts";
 import CustomTooltip from "./CustomTooltip";
 import { Tugas } from "../../models/task/task";
-import grafikMingguan from "../../pages/admin/tugas/GrafikMingguan";
+import grafikMingguan from "../../utils/GrafikMingguan";
 
 interface tugas{
     tugas : Tugas[]

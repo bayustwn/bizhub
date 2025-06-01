@@ -1,4 +1,4 @@
-import { Tugas } from "../../../models/task/task";
+import { Tugas } from "../models/task/task";
 
 type DataGrafik = {
   minggu: string;

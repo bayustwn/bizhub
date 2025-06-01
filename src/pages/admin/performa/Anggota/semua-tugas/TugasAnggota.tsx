@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import Navbar from "../../../../../component/Navbar";
 import SummaryTable from "../../../../../component/table/SummaryTable";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../../../utils/Api";
 import { useToken } from "../../../../../utils/Cookies";
 import { Tugas } from "../../../../../models/task/task";
 import { TableColumn } from "react-data-table-component";
@@ -15,9 +15,8 @@ function TugasAnggota() {
   const [tugas,setTugas] = useState<Tugas[]>();
 
     const getTugas = async () => {
-    await axios
-      .post(
-        import.meta.env.VITE_BASE_URL + "/user/bulanan/" + id,
+    await api
+      .post("/user/bulanan/" + id,
         {
           bulan: Number(bulan),
           tahun: Number(tahun),
@@ -33,7 +32,6 @@ function TugasAnggota() {
 
   useEffect(()=>{
     getTugas()
-    console.log(bulan)
   },[])
 
   const columns: TableColumn<Tugas>[] = [

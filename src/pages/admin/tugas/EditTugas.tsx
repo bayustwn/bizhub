@@ -3,7 +3,7 @@ import Navbar from "../../../component/Navbar";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { id } from "date-fns/locale/id";
-import axios from "axios";
+import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { useEffect, useState } from "react";
 import { Tugas, User } from "../../../models/task/task";
@@ -21,9 +21,8 @@ function EditTugas() {
   const navigate = useNavigate();
 
   const editTugas = async () => {
-    await axios
-      .put(
-        import.meta.env.VITE_BASE_URL + "/tugas/update/" + id,
+    await api
+      .put("/tugas/update/" + id,
         {
           ...detail,
           user_tugas: userTugas,
@@ -40,8 +39,8 @@ function EditTugas() {
   };
 
   const ambilTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas/detail/" + id, {
+    await api
+      .get("/tugas/detail/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -53,8 +52,8 @@ function EditTugas() {
   };
 
   const anggota = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/user", {
+    await api
+      .get("/user", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },

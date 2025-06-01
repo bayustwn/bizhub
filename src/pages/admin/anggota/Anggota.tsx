@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../../component/Navbar";
-import axios from "axios";
+import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { Mingguan } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -10,7 +10,7 @@ function Anggota() {
     const [anggotaTim,setAnggotaTim] = useState<Mingguan[]>()
 
     const getAnggotaTim = async() =>{
-        await axios.get(import.meta.env.VITE_BASE_URL + "/user",{
+        await api.get("/user",{
             headers : {
                 Authorization : "Bearer " + getToken()
             }

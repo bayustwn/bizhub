@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../../component/Navbar";
-import axios from "axios";
+import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { Performa } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -12,9 +12,8 @@ function PerformaAnggota() {
   const navigate = useNavigate();
 
   const getAnggotaTim = async () => {
-    await axios
-      .post(
-        import.meta.env.VITE_BASE_URL + "/user/bulanan",
+    await api
+      .post("/user/bulanan",
         { bulan: 5, tahun: 2025 },
         {
           headers: {

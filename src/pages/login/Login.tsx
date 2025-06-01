@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../utils/Api";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -18,8 +18,8 @@ function Login() {
   const handleLogin = async () => {
     if (email && password) {
       setIsLogin(true);
-      await axios
-        .post(import.meta.env.VITE_BASE_URL + "/auth/login", {
+      await api
+        .post("/auth/login", {
           email,
           password,
         })
@@ -33,7 +33,7 @@ function Login() {
             vapidKey: import.meta.env.VITE_APP_VAPID_KEY,
           });
 
-          axios.post(import.meta.env.VITE_BASE_URL + "/notif/tambah", {
+          await api.post("/notif/tambah", {
             token: token_notif,
             id_user: jwt.id,
           })

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import Navbar from "../../../component/Navbar";
 import Kuantitas from "../../../component/card/Kuantitas";
 import Deadline from "../../../component/card/Deadline";
-import axios from "axios";
+import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { useEffect, useState } from "react";
 import { Tugas, User } from "../../../models/task/task";
@@ -14,8 +14,8 @@ function DetailTugas() {
   const navigate = useNavigate()
 
   const ambilTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas/detail/" + id, {
+    await api
+      .get("/tugas/detail/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },

@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../../utils/Api";
 import Navbar from "../../../component/Navbar";
 import Status from "../../../component/status/Status";
 import { StatusModel } from "../../../models/task/status";
@@ -40,9 +40,8 @@ function PenggunaTugas() {
   ];
 
     const updateStatus = async (id: string, status: string) => {
-    await axios
-      .put(
-        import.meta.env.VITE_BASE_URL + "/tugas/update/status",
+    await api
+      .put("/tugas/update/status",
         {
           id: id,
           status: status,
@@ -59,8 +58,8 @@ function PenggunaTugas() {
   };
 
   const tugasAnggota = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas/user/" + id, {
+    await api
+      .get("/tugas/user/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },

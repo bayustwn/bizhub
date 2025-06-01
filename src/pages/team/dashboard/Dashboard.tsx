@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../../utils/Api";
 import Counter from "../../../component/card/Counter";
 import More from "../../../component/card/More";
 import Navbar from "../../../component/Navbar";
@@ -17,14 +17,12 @@ function Dashboard() {
   const [tugas, setTugas] = useState<Tugas[]>();
 
   const getTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas/user/" + id, {
+    await api
+      .get("/tugas/user/" + id, {
         headers: { Authorization: "Bearer " + getToken() },
       })
       .then((res) => {
         setTugas(res.data.data);
-        console.log(res.data);
-        console.log(id)
       });
   };
 

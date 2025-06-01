@@ -3,7 +3,7 @@ import Navbar from "../../../component/Navbar";
 import Status from "../../../component/status/Status";
 import { StatusModel } from "../../../models/task/status";
 import { Tugas } from "../../../models/task/task";
-import axios from "axios";
+import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import TugasCard from "../../../component/card/TugasCard";
 import { useNavigate } from "react-router";
@@ -31,9 +31,8 @@ function SemuaTugas() {
   };
 
   const updateStatus = async (id: string, status: string) => {
-    await axios
-      .put(
-        import.meta.env.VITE_BASE_URL + "/tugas/update/status",
+    await api
+      .put("/tugas/update/status",
         {
           id: id,
           status: status,
@@ -50,8 +49,8 @@ function SemuaTugas() {
   };
 
   const hapusTugas = async () => {
-    await axios
-      .delete(import.meta.env.VITE_BASE_URL + "/tugas/delete/" + id, {
+    await api
+      .delete("/tugas/delete/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -65,8 +64,8 @@ function SemuaTugas() {
   };
 
   const ambilSemuaTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas", {
+    await api
+      .get("/tugas", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
