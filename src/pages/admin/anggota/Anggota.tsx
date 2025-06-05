@@ -4,68 +4,119 @@ import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { Mingguan } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
+import { Posisi } from "../../../models/posisi";
 
 function Anggota() {
-    const {getToken} = useToken()
-    const [anggotaTim,setAnggotaTim] = useState<Mingguan[]>()
+  const { getToken } = useToken();
+  const [anggotaTim, setAnggotaTim] = useState<Mingguan[]>();
+  const [posisi, setPosisi] = useState<Posisi[]>();
 
-    const getAnggotaTim = async() =>{
-        await api.get("/user",{
-            headers : {
-                Authorization : "Bearer " + getToken()
-            }
-        }).then((res)=>{
-            setAnggotaTim(res.data.data)
-        })
-    }
-
-    useEffect(()=>{
-        getAnggotaTim()
-    },[])
-
-    const columns: TableColumn<Mingguan>[] = [
-        {
-            name : "Nama",
-            selector : (row)=>row.nama
+  const ambilPosisi = async () => {
+    await api
+      .get("/user/posisi", {
+        headers: {
+          Authorization: "Bearer " + getToken(),
         },
-        {
-            name : "Tugas Aktif",
-            selector : (row)=>row._count.user_tugas,
-            cell : (row)=>{
-                return (
-                    <p className="font-bold text-primary">{row._count.user_tugas}</p>
-                )
-            }
-        }
-    ]
+      })
+      .then((res) => {
+        setPosisi(res.data.data);
+      });
+  };
+
+  const getAnggotaTim = async () => {
+    await api
+      .get("/user", {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
+      })
+      .then((res) => {
+        setAnggotaTim(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getAnggotaTim();
+  }, []);
+
+  const columns: TableColumn<Mingguan>[] = [
+    {
+      name: "Nama",
+      selector: (row) => row.nama,
+    },
+    {
+      name: "Tugas Aktif",
+      selector: (row) => row._count.user_tugas,
+      cell: (row) => {
+        return (
+          <p className="font-bold text-primary">{row._count.user_tugas}</p>
+        );
+      },
+    },
+    {
+    name: "Aksi",
+    cell: (row) => (
+      <button
+        onClick={() => console.log(row.id)}
+        className="cursor-pointer text-white px-3 py-1 rounded"
+      >
+        <img src="/assets/icons/trash.svg" className="hover:w-4 transition-all w-3" alt="hapus" />
+      </button>
+    ),
+    ignoreRowClick: true,
+  },
+  ];
+
+  useEffect(() => {
+    ambilPosisi();
+  }, []);
 
   return (
-    <div className="flex flex-col gap-5 w-full font-poppins">
+    <div className="relative flex flex-col gap-5 w-full h-full font-poppins">
+      <div className="absolute bottom-0 right-0 cursor-pointer flex bg-primary-200 border-2 border-primary py-3 px-4 rounded-4xl flex-row gap-3">
+        <p className="font-bold text-primary">Tambah Anggota</p>
+        <img src="/assets/icons/plus.svg" alt="tambah anggota" />
+      </div>
       <Navbar title="Anggota Tim" />
       <div className="flex flex-row text-white font-medium gap-2 mt-8">
-        <div className="flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 bg-primary">
-          <p>Copy Writer</p>
-          <img src="/assets/icons/writer.svg" width={20} alt="writer" />
-        </div>
-        <div className="flex-1 rounded-lg text-primary  flex flex-row items-center justify-between px-5 h-15 bg-primary-200">
-          <p>Desain Grafis</p>
-          <img src="/assets/icons/image.svg" width={20} alt="image" />
-        </div>
-        <div className="flex-1 rounded-lg  flex flex-row items-center justify-between px-5 h-15 bg-primary">
-          <p>Video Editor</p>
-          <img src="/assets/icons/video.svg" width={20} alt="video" />
-        </div>
+        {posisi?.map((posisi, index) => {
+          return (
+            <div
+              key={posisi.id}
+              className={`flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 ${
+                index % 2 == 0
+                  ? "bg-primary text-white"
+                  : "bg-primary-200 text-primary"
+              } `}
+            >
+              <p>{posisi.posisi}</p>
+            </div>
+          );
+        })}
       </div>
       <div className="flex flex-row gap-2 h-50">
-        <div className="flex flex-col flex-1 bg-white rounded-lg border-2 border-black">
-            <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "writer")! : []} />
-        </div>
-        <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-        <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "image")! : []} />
-        </div>
-        <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-        <DataTable highlightOnHover theme="tables" columns={columns} data={anggotaTim? anggotaTim?.filter((data)=>data.posisi == "video")! : []} />
-        </div>
+        {posisi?.map((posisi) => {
+          return (
+            <div
+              key={posisi.id}
+              className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black"
+            >
+              <DataTable
+                highlightOnHover
+                theme="tables"
+                pointerOnHover
+                columns={columns}
+                data={
+                  anggotaTim
+                    ? anggotaTim?.filter(
+                        (data) => data.posisi == posisi.posisi
+                      )!
+                    : []
+                }
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

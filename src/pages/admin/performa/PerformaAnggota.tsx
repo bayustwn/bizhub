@@ -5,11 +5,23 @@ import { useToken } from "../../../utils/Cookies";
 import { Performa } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useNavigate } from "react-router";
+import { Posisi } from "../../../models/posisi";
 
 function PerformaAnggota() {
   const { getToken } = useToken();
   const [anggotaTim, setAnggotaTim] = useState<Performa[]>();
   const navigate = useNavigate();
+  const [posisi,setPosisi] = useState<Posisi[]>()
+
+  const ambilPosisi = async() => {
+    await api.get("/user/posisi",{
+      headers : {
+        Authorization : "Bearer " + getToken()
+      }
+    }).then(res=>{
+      setPosisi(res.data.data)
+    })
+  }
 
   const getAnggotaTim = async () => {
     await api
@@ -28,6 +40,7 @@ function PerformaAnggota() {
 
   useEffect(() => {
     getAnggotaTim();
+    ambilPosisi()
   }, []);
 
   const columns: TableColumn<Performa>[] = [
@@ -68,21 +81,18 @@ function PerformaAnggota() {
     <div className="flex flex-col gap-5 w-full font-poppins">
       <Navbar title="Performa Anggota Tim" />
       <div className="flex flex-row text-white font-medium gap-2 mt-8">
-        <div className="flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 bg-primary">
-          <p>Copy Writer</p>
-          <img src="/assets/icons/writer.svg" width={20} alt="writer" />
+        {posisi?.map((posisi,index)=>{
+          return (
+            <div key={posisi.id} className={`flex-1 flex flex-row items-center justify-between px-5 rounded-lg h-15 ${index % 2 == 0? "bg-primary text-white" : "bg-primary-200 text-primary"} `}>
+          <p>{posisi.posisi}</p>
         </div>
-        <div className="flex-1 rounded-lg text-primary  flex flex-row items-center justify-between px-5 h-15 bg-primary-200">
-          <p>Desain Grafis</p>
-          <img src="/assets/icons/image.svg" width={20} alt="image" />
-        </div>
-        <div className="flex-1 rounded-lg  flex flex-row items-center justify-between px-5 h-15 bg-primary">
-          <p>Video Editor</p>
-          <img src="/assets/icons/video.svg" width={20} alt="video" />
-        </div>
+          )
+        })}
       </div>
       <div className="flex flex-row gap-2 h-50">
-        <div className="flex flex-col flex-1 bg-white rounded-lg border-2 border-black">
+        {posisi?.map((posisi)=>{
+          return(
+            <div key={posisi.id} className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
           <DataTable
             highlightOnHover
             theme="tables"
@@ -91,39 +101,13 @@ function PerformaAnggota() {
             columns={columns}
             data={
               anggotaTim
-                ? anggotaTim?.filter((data) => data.posisi == "writer")!
+                ? anggotaTim?.filter((data) => data.posisi == posisi.posisi)!
                 : []
             }
           />
         </div>
-        <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-          <DataTable
-            highlightOnHover
-            theme="tables"
-            pointerOnHover
-            onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
-            columns={columns}
-            data={
-              anggotaTim
-                ? anggotaTim?.filter((data) => data.posisi == "image")!
-                : []
-            }
-          />
-        </div>
-        <div className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black">
-          <DataTable
-            highlightOnHover
-            pointerOnHover
-            onRowClicked={(data)=>navigate('/admin/performa/anggota/' + data.id)}
-            theme="tables"
-            columns={columns}
-            data={
-              anggotaTim
-                ? anggotaTim?.filter((data) => data.posisi == "video")!
-                : []
-            }
-          />
-        </div>
+          )
+        })}
       </div>
     </div>
   );

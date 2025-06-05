@@ -8,7 +8,7 @@ const PrivateRouteTeam = () => {
   const posisi = getPosisi();
 
   if (!token) return <Navigate to="/login" />;
-  if (posisi === "admin") return <Navigate to="/admin/dashboard" />;
+  if (posisi === "Admin") return <Navigate to="/admin/dashboard" />;
 
   return (
     <div className="flex flex-row h-screen">

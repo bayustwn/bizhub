@@ -1,4 +1,4 @@
-import { data, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Navbar from "../../../component/Navbar";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,7 +19,7 @@ function EditTugas() {
   const [userTugas, setUserTugas] = useState<User[]>();
   const [files, setFiles] = useState<Files[]>();
   const [deletedFiles, setDeletedFiles] = useState<string[]>();
-  const [uploadedFiles, setUploadedFiles] = useState<FileList>();
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>();
   const [semuaAnggota, setSemuaAnggota] = useState<User[]>();
   const ref = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ function EditTugas() {
   const unggahFile = async () => {
     const formData = new FormData();
     for (let i = 0; i < (uploadedFiles?.length || 0); i++) {
-      formData.append("file", uploadedFiles![i] as File);
+      formData.append("file[]", uploadedFiles![i]);
     }
     formData.append("id_tugas", detail?.id || ("" as string));
 
@@ -47,18 +47,20 @@ function EditTugas() {
       });
   };
 
-  const removeFile = async()=>{
-    await api.delete("/files/delete/" + id,{
-      headers: {
-        Authorization: "Bearer " + getToken(),
-      },
-      data: {
-        files: deletedFiles
-      }
-    }).catch(() => {
-      toast.error("Gagal menghapus file");
-    })
-  }
+  const removeFile = async () => {
+    await api
+      .delete("/files/delete/" + id, {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
+        data: {
+          files: deletedFiles,
+        },
+      })
+      .catch(() => {
+        toast.error("Gagal menghapus file");
+      });
+  };
 
   const editTugas = async () => {
     if ((uploadedFiles?.length || 0) > 0) {
@@ -206,7 +208,7 @@ function EditTugas() {
             return (
               <div className="relative" key={file.id}>
                 <div
-                  onClick={() => window.open(file.url, "_blank")}
+                  onClick={() => file.url? window.open(file.url, "_blank") : null }
                   className="border-2 cursor-pointer border-black flex flex-row gap-2 rounded-4xl px-6 py-1"
                 >
                   <img src="/assets/icons/file.svg" alt="user" width={13} />
@@ -214,10 +216,28 @@ function EditTugas() {
                 </div>
                 <div
                   onClick={() => {
+                    if (file.url === "") {
+                      const indexUploadedFiles = uploadedFiles?.findIndex(
+                        (files) => files.name === file.nama_file
+                      );
+
+                      if (indexUploadedFiles !== -1) {
+                        const updatedUploadedFiles = [...uploadedFiles!];
+                        updatedUploadedFiles.splice(indexUploadedFiles!, 1);
+                        setUploadedFiles(updatedUploadedFiles);
+                      }
+                    }
+
                     const updatedFiles = [...files];
                     updatedFiles.splice(index, 1);
                     setFiles(updatedFiles);
-                    setDeletedFiles((prev) => [...(prev || []), file.nama_file]);
+
+                    if (file.url !== "") {
+                      setDeletedFiles((prev) => [
+                        ...(prev || []),
+                        file.nama_file,
+                      ]);
+                    }
                   }}
                   className="cursor-pointer absolute p-1 rounded-4xl -top-1 -right-1 bg-red flex items-center justify-center"
                 >
@@ -236,18 +256,21 @@ function EditTugas() {
             <input
               ref={ref}
               type="file"
+              multiple
               onChange={(e) => {
-                const fileBaru: Files = {
-                  id: "",
-                  nama: e.target.files![0].name,
-                  nama_file: e.target.files![0].name,
+                const selectedFiles = Array.from(e.target.files || []);
+
+                const fileBaruList: Files[] = selectedFiles.map((file) => ({
+                  id: crypto.randomUUID(),
+                  nama: file.name,
+                  nama_file: file.name,
                   url: "",
-                };
-                setFiles((prev) => [...(prev || []), fileBaru]);
-                setUploadedFiles(e.target.files!);
+                }));
+
+                setFiles((prev) => [...(prev || []), ...fileBaruList]);
+                setUploadedFiles((prev) => [...(prev || []), ...selectedFiles]);
               }}
               className="hidden"
-              multiple
             />
           </div>
         </div>

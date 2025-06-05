@@ -16,7 +16,7 @@ export interface Tugas {
   tanggal_diubah?: Date;
   terlambat: boolean;
   user_tugas: User[];
-  file: Files[]
+  file?: Files[]
 }
 
 export interface Files{
