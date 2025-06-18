@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import { useEffect } from "react";
-import { onMessage } from "firebase/messaging";
-import { messaging  } from "./firebase/fireBaseConfig";
+import { MessagePayload, onMessage } from "firebase/messaging";
+import { messaging } from "./firebase/fireBaseConfig";
 
 import Home from "./pages/home/Home";
 import AdminDashboard from "./pages/admin/dashboard/Dashboard";
@@ -26,27 +26,33 @@ import TugasTerlambat from "./pages/admin/performa/Anggota/terlambat/TugasTerlam
 import Performa from "./pages/team/performa/Performa";
 
 function App() {
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
 
-async function requestPermission() {
-  const permission = await Notification.requestPermission();
+    if (permission === "denied") {
+      alert(
+        "Notifikasi ditolak. Silakan aktifkan notifikasi di pengaturan browser Anda."
+      );
+      return;
+    }
 
- if (permission === "denied") {
-    alert("Notifikasi ditolak. Silakan aktifkan notifikasi di pengaturan browser Anda.");
+    if (permission === "granted") {
+      onMessage(messaging, (payload: MessagePayload) => {
+        const { title, body } = payload.data || {};
+
+        if (title) {
+          const options: NotificationOptions = {};
+          if (body !== undefined) options.body = body;
+
+          new Notification(title, options);
+        }
+      });
+    }
   }
-  
-  onMessage(messaging, (payload) => {
-      const { title, body } = payload.data || {};
-      
-      if (Notification.permission === "granted") {
-        new Notification(title!, { body});
-      }
-  });
 
-}
-
-useEffect(() => {
-  requestPermission();
-}, []);
+  useEffect(() => {
+    requestPermission();
+  }, []);
 
   return (
     <Routes>

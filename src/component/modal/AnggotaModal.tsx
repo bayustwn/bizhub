@@ -41,7 +41,7 @@ const AnggotaModal = ({
   const tambahAnggota = async () => {
     await api
       .post(
-        "/user/tambah",
+        "/user/create",
         {
           ...anggota,
           password,
@@ -55,7 +55,7 @@ const AnggotaModal = ({
       .then(() => {
         toast.success("Sukses Menambah Anggota");
       }).catch(()=>{
-        console.log(anggota, password)
+        toast.error("Error menambah anggota")
       });
   };
 

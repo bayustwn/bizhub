@@ -180,7 +180,7 @@ function Anggota() {
           );
         })}
       </div>
-      <div className="flex flex-row gap-2 h-50">
+      <div className="flex flex-row gap-2 h-fit">
         {posisi?.map((posisi) => {
           return (
             <div

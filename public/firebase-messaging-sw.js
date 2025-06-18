@@ -1,7 +1,5 @@
 importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
-importScripts(
-  "https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"
-);
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js");
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuw76AEvgz6dTleAPqnLKFW0cH0r3DOpg",
@@ -20,10 +18,11 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   const { title, body, icon } = payload.data;
 
-  const notificationOptions = {
-    body,
-    icon,
-  };
+  const notificationOptions = {};
 
-  self.registration.showNotification(title, notificationOptions);
+  if (body !== undefined) notificationOptions.body = body;
+  if (icon !== undefined) notificationOptions.icon = icon;
+  if (title !== undefined) {
+    self.registration.showNotification(title, notificationOptions);
+  }
 });
