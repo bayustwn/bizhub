@@ -27,7 +27,7 @@ export interface Files{
 }
 
 export interface User {
-  id: string;
+  id?: string;
   nama: string;
   email: string;
   posisi: string;

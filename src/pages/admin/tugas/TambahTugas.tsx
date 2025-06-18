@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import Navbar from "../../../component/Navbar";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,7 +6,7 @@ import { id } from "date-fns/locale/id";
 import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { useEffect, useRef, useState } from "react";
-import { Files, Tugas, User } from "../../../models/task/task";
+import { Tugas, User } from "../../../models/task/task";
 import TextareaAutosize from "react-textarea-autosize";
 import toast from "react-hot-toast";
 
@@ -70,7 +70,9 @@ function TambahTugas() {
         }
       )
       .then((res) => {
-        unggahFile(res.data.data)
+        if (uploadedFiles) {
+          unggahFile(res.data.data)
+        }
         navigate("/admin/semua-tugas");
       })
       .catch((err) => {

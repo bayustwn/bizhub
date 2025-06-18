@@ -21,7 +21,7 @@ const CustomTooltip = ({ active, payload }: Tooltips) => {
         <p className="text-primary text-sm font-bold">
           {data.nilai} Tugas
         </p>
-        <p className="font-medium text-sm mt-2">{formatDate(data.tanggal)}</p>
+        {data.tanggal? <p className="font-medium text-sm mt-2">{formatDate(data.tanggal)}</p> : "" }
       </div>
     );
   }

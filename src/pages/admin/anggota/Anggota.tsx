@@ -5,11 +5,34 @@ import { useToken } from "../../../utils/Cookies";
 import { Mingguan } from "../../../models/task/task";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Posisi } from "../../../models/posisi";
+import toast from "react-hot-toast";
+import AnggotaModal from "../../../component/modal/AnggotaModal";
+import ConfirmModal from "../../../component/modal/ConfirmModal";
 
 function Anggota() {
   const { getToken } = useToken();
   const [anggotaTim, setAnggotaTim] = useState<Mingguan[]>();
   const [posisi, setPosisi] = useState<Posisi[]>();
+  const [tambah, setTambah] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [hapus, setHapus] = useState<boolean>(false);
+  const [id, setId] = useState<string>();
+
+  const hapusAnggota = async (id: string) => {
+    await api
+      .delete("/user/hapus/" + id, {
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        },
+      })
+      .then(() => {
+        toast.success("Berhasil Menghapus Anggota!");
+        getAnggotaTim();
+      })
+      .catch(() => {
+        toast.error("Gagal Menghapus Anggota!");
+      });
+  };
 
   const ambilPosisi = async () => {
     await api
@@ -54,17 +77,39 @@ function Anggota() {
       },
     },
     {
-    name: "Aksi",
-    cell: (row) => (
-      <button
-        onClick={() => console.log(row.id)}
-        className="cursor-pointer text-white px-3 py-1 rounded"
-      >
-        <img src="/assets/icons/trash.svg" className="hover:w-4 transition-all w-3" alt="hapus" />
-      </button>
-    ),
-    ignoreRowClick: true,
-  },
+      name: "Aksi",
+      cell: (row) => (
+        <div className="flex flex-row">
+          <button
+            onClick={() => {
+              setId(row.id);
+              setTimeout(() => setEdit(true), 0);
+            }}
+            className="cursor-pointer text-white px-3 py-1 rounded"
+          >
+            <img
+              src="/assets/icons/edit.svg"
+              className="hover:w-4 transition-all w-3"
+              alt="hapus"
+            />
+          </button>
+          <button
+            onClick={() => {
+              setId(row.id);
+              setTimeout(() => setHapus(true), 0);
+            }}
+            className="cursor-pointer text-white px-3 py-1 rounded"
+          >
+            <img
+              src="/assets/icons/trash.svg"
+              className="hover:w-4 transition-all w-3"
+              alt="hapus"
+            />
+          </button>
+        </div>
+      ),
+      ignoreRowClick: true,
+    },
   ];
 
   useEffect(() => {
@@ -73,7 +118,48 @@ function Anggota() {
 
   return (
     <div className="relative flex flex-col gap-5 w-full h-full font-poppins">
-      <div className="absolute bottom-0 right-0 cursor-pointer flex bg-primary-200 border-2 border-primary py-3 px-4 rounded-4xl flex-row gap-3">
+      <AnggotaModal
+        posisi={posisi || []}
+        tambah={true}
+        isOpen={tambah}
+        title="Tambah Anggota"
+        message="Isi data yang dibutuhkan untuk menambah anggota baru."
+        onConfirm={() => {
+          setTambah(false);
+          getAnggotaTim();
+        }}
+        confirmText="Tambah"
+        onCancel={() => setTambah(false)}
+      />
+      <AnggotaModal
+        posisi={posisi || []}
+        id={id}
+        tambah={false}
+        isOpen={edit}
+        title="Ubah Anggota"
+        message="Isi data yang dibutuhkan untuk mengubah anggota"
+        onConfirm={() =>{
+           setEdit(false)
+           getAnggotaTim()
+        }}
+        confirmText="Ubah"
+        onCancel={() => setEdit(false)}
+      />
+      <ConfirmModal
+        isOpen={hapus}
+        title="Yakin untuk menghapus anggota?"
+        message="Setelah anggota dihapus tidak dapat dikembalikan!"
+        onCancel={() => setHapus(false)}
+        confirmText="Hapus Anggota"
+        onConfirm={() =>{
+           hapusAnggota(id!)
+           setHapus(false)
+        }}
+      />
+      <div
+        onClick={() => setTambah(true)}
+        className="absolute bottom-0 right-0 cursor-pointer flex bg-primary-200 border-2 border-primary py-3 px-4 rounded-4xl flex-row gap-3"
+      >
         <p className="font-bold text-primary">Tambah Anggota</p>
         <img src="/assets/icons/plus.svg" alt="tambah anggota" />
       </div>
@@ -99,7 +185,7 @@ function Anggota() {
           return (
             <div
               key={posisi.id}
-              className="flex flex-col flex-1  bg-white  rounded-lg  border-2 border-black"
+              className="flex flex-col flex-1 bg-white rounded-lg border-2 border-black"
             >
               <DataTable
                 highlightOnHover
