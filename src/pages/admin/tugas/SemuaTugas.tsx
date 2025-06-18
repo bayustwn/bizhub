@@ -32,7 +32,7 @@ function SemuaTugas() {
 
   const updateStatus = async (id: string, status: string) => {
     await api
-      .put("/tugas/update/status",
+      .put("/tugas/ubah/status",
         {
           id: id,
           status: status,
@@ -45,12 +45,16 @@ function SemuaTugas() {
       )
       .then(() => {
         ambilSemuaTugas();
+        toast.success("Status tugas berhasil diubah!");
+      })
+      .catch(() => {
+        toast.error("Gagal mengubah status tugas!");
       });
   };
 
   const hapusTugas = async () => {
     await api
-      .delete("/tugas/delete/" + id, {
+      .delete("/tugas/hapus/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -60,6 +64,9 @@ function SemuaTugas() {
           setModal(false);
           toast.success(res.data.message);
         });
+      })
+      .catch(() => {
+        toast.error("Gagal menghapus tugas!");
       });
   };
 
@@ -183,7 +190,7 @@ function SemuaTugas() {
                             judul={tugasItem.judul}
                             kuantitas={tugasItem.kuantitas}
                             deadline={tugasItem.deadline}
-                            user={tugasItem.user_tugas.length}
+                            user={tugasItem.tugas_pengguna.length}
                             onDelete={() => konfirmasiHapus(tugasItem.id)}
                             onEdit={() =>
                               navigate(

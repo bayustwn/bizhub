@@ -5,7 +5,7 @@ import Deadline from "../../../component/card/Deadline";
 import api from "../../../utils/Api";
 import { useToken } from "../../../utils/Cookies";
 import { useEffect, useState } from "react";
-import { Tugas, User } from "../../../models/task/task";
+import { Tugas, User, Files } from "../../../models/task/task";
 
 function DetailTugas() {
   const { id } = useParams();
@@ -55,13 +55,23 @@ function DetailTugas() {
         </div>
         <div className="border-1 border-black/20" />
         <div className="flex flex-row text-black font-medium gap-2">
-          <div className="border-2 border-black flex flex-row gap-2 rounded-4xl px-6 py-1">
-            <img src="/assets/icons/file.svg" alt="user" width={13} />
-            <p>Script Image</p>
-          </div>
+        <div className="flex flex-row flex-wrap text-black font-medium gap-2">
+          {detail?.berkas?.map((berkas: Files) => {
+            return (
+              <div
+                key={berkas.id}
+                onClick={()=>window.open(berkas.url, "_blank")}
+                className="border-2 cursor-pointer border-black flex flex-row gap-2 rounded-4xl px-6 py-1"
+              >
+                <img src="/assets/icons/file.svg" alt="user" width={13} />
+                <p>{berkas.nama}</p>
+              </div>
+            );
+          })}
+        </div>
         </div>
         <div className="flex flex-row text-primary font-medium gap-2">
-          {detail?.user_tugas.map((user: User, index) => {
+          {detail?.tugas_pengguna.map((user: User, index) => {
             return (
               <div
                 key={index}

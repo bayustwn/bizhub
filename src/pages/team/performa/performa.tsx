@@ -36,7 +36,7 @@ function Performa() {
 
   const getTugas = async () => {
     await api
-      .post("/user/bulanan/" + id,
+      .post("/pengguna/bulanan/" + id,
         {
           bulan: bulanTahun.bulan,
           tahun: bulanTahun.tahun,
@@ -51,15 +51,15 @@ function Performa() {
   };
 
   const tugasSelesai = (): number => {
-    let terbaru: number = bulnanan?.user_tugas
-      ? bulnanan.user_tugas?.filter((data) => data.status == "Selesai").length
+    let terbaru: number = bulnanan?.tugas_pengguna
+      ? bulnanan.tugas_pengguna?.filter((data) => data.status == "Selesai").length
       : 0;
     return terbaru;
   };
 
   const tugasTerlambat = (): number => {
-    let terbaru: number = bulnanan?.user_tugas
-      ? bulnanan?.user_tugas.filter((data) => data.terlambat == true).length
+    let terbaru: number = bulnanan?.tugas_pengguna
+      ? bulnanan?.tugas_pengguna.filter((data) => data.terlambat == true).length
       : 0;
     return terbaru;
   };
@@ -104,7 +104,7 @@ function Performa() {
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
           <div className="flex font-bold flex-col flex-2">
             <p>Total Tugas</p>
-            <KomponenGrafikBulanan tugas={bulnanan?.user_tugas || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
+            <KomponenGrafikBulanan tugas={bulnanan?.tugas_pengguna || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter
@@ -128,26 +128,26 @@ function Performa() {
         <div className="flex-1 flex flex-col items-center p-6 bg-white border-1 border-black rounded-lg bg-primary">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Semua Tugas</p>
-            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
+            <div onClick={() => navigate("/team/performa/semua-tugas/" + `${bulanTahun.bulan}/${bulanTahun.tahun}`)}>
               <More />
             </div>
           </div>
           <SummaryTable
-            click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
-            data={bulnanan?.user_tugas!}
+            click={(id) => navigate("/team/semua-tugas/tugas/" + id)}
+            data={bulnanan?.tugas_pengguna!}
           />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Tugas Terlambat</p>
-            <div onClick={() => navigate("/admin/performa/anggota/semua-tugas/terlambat/" + `${bulanTahun.bulan}/${bulanTahun.tahun}/${id}`)}>
+            <div onClick={() => navigate("/team/performa/semua-tugas/terlambat/" + `${bulanTahun.bulan}/${bulanTahun.tahun}`)}>
               <More />
             </div>
           </div>
           <SummaryTable
-            click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
+            click={(id) => navigate("/team/semua-tugas/tugas/" + id)}
             data={
-              bulnanan?.user_tugas.filter(
+              bulnanan?.tugas_pengguna.filter(
                 (tugas) => tugas.terlambat
               )!
             }

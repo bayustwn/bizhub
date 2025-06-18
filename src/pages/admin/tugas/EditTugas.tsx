@@ -37,7 +37,7 @@ function EditTugas() {
     formData.append("id_tugas", detail?.id || ("" as string));
 
     await api
-      .post("/files/upload", formData, {
+      .post("/berkas/unggah", formData, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -49,7 +49,7 @@ function EditTugas() {
 
   const removeFile = async () => {
     await api
-      .delete("/files/delete/" + id, {
+      .delete("/berkas/hapus/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -73,10 +73,10 @@ function EditTugas() {
 
     await api
       .put(
-        "/tugas/update/" + id,
+        "/tugas/ubah/" + id,
         {
           ...detail,
-          user_tugas: userTugas,
+          tugas_pengguna: userTugas,
         },
         {
           headers: {
@@ -85,7 +85,11 @@ function EditTugas() {
         }
       )
       .then(() => {
+        toast.success("Tugas berhasil diubah!");
         navigate("/admin/semua-tugas");
+      })
+      .catch(() => {
+        toast.error("Gagal mengubah tugas!");
       });
   };
 
@@ -97,15 +101,15 @@ function EditTugas() {
         },
       })
       .then((res) => {
-        setFiles(res.data.data.tugas.file);
+        setFiles(res.data.data.tugas.berkas);
         setDetail(res.data.data.tugas);
-        setUserTugas(res.data.data.user_tugas);
+        setUserTugas(res.data.data.tugas_pengguna);
       });
   };
 
   const anggota = async () => {
     await api
-      .get("/user", {
+      .get("/pengguna", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -121,7 +125,7 @@ function EditTugas() {
   }, []);
 
   useEffect(() => {
-    setUserTugas(detail?.user_tugas);
+    setUserTugas(detail?.tugas_pengguna);
   }, [detail]);
 
   return (

@@ -24,6 +24,8 @@ import DetailTugas from "./pages/team/tugas/DetailTugas";
 import SemuaTugasAnggota from "./pages/admin/performa/Anggota/semua-tugas/TugasAnggota";
 import TugasTerlambat from "./pages/admin/performa/Anggota/terlambat/TugasTerlambat";
 import Performa from "./pages/team/performa/Performa";
+import SemuaTugasTeam from "./pages/team/performa/SemuaTugasTeam";
+import TugasTerlambatTeam from "./pages/team/performa/TugasTerlambatTeam";
 
 function App() {
   async function requestPermission() {
@@ -83,6 +85,14 @@ function App() {
         <Route path="semua-tugas" element={<TeamTugas />} />
         <Route path="semua-tugas/tugas/:id" element={<DetailTugas />} />
         <Route path="performa" element={<Performa />} />
+        <Route
+          path="performa/semua-tugas/:bulan/:tahun"
+          element={<SemuaTugasTeam />}
+        />
+        <Route
+          path="performa/semua-tugas/terlambat/:bulan/:tahun"
+          element={<TugasTerlambatTeam />}
+        />
       </Route>
 
       <Route element={<AlreadyLogin />}>

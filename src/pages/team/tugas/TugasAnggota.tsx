@@ -8,6 +8,7 @@ import { Tugas } from "../../../models/task/task";
 import { useNavigate } from "react-router";
 import TugasCard from "../../../component/card/TugasCard";
 import { closestCorners, DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@dnd-kit/core';
+import { toast } from "react-hot-toast";
 
 
 function PenggunaTugas() {
@@ -41,7 +42,7 @@ function PenggunaTugas() {
 
     const updateStatus = async (id: string, status: string) => {
     await api
-      .put("/tugas/update/status",
+      .put("/tugas/ubah/status",
         {
           id: id,
           status: status,
@@ -54,12 +55,16 @@ function PenggunaTugas() {
       )
       .then(() => {
         tugasAnggota();
+        toast.success("Status tugas berhasil diubah!");
+      })
+      .catch(() => {
+        toast.error("Gagal mengubah status tugas!");
       });
   };
 
   const tugasAnggota = async () => {
     await api
-      .get("/tugas/user/" + id, {
+      .get("/tugas/pengguna/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -157,7 +162,7 @@ function PenggunaTugas() {
                             judul={tugasItem.judul}
                             kuantitas={tugasItem.kuantitas}
                             deadline={tugasItem.deadline}
-                            user={tugasItem.user_tugas.length}
+                            user={tugasItem.tugas_pengguna.length}
                             style={`transition-all ${
                               isDragging ? "border-primary" : "border-black"
                             }`}

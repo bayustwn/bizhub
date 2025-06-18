@@ -24,7 +24,7 @@ function TambahTugas() {
     kuantitas: 0,
     status: "",
     terlambat: false,
-    user_tugas: [],
+    tugas_pengguna: [],
   });
   const [userTugas, setUserTugas] = useState<User[]>([]);
   const [semuaAnggota, setSemuaAnggota] = useState<User[]>([]);
@@ -44,7 +44,7 @@ function TambahTugas() {
     formData.append("id_tugas", id);
 
     await api
-      .post("/files/upload", formData, {
+      .post("/berkas/unggah", formData, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -58,10 +58,10 @@ function TambahTugas() {
     
     await api
       .post(
-        "/tugas/add",
+        "/tugas/tambah",
         {
           ...detail,
-          user_tugas: userTugas,
+          tugas_pengguna: userTugas,
         },
         {
           headers: {
@@ -73,16 +73,18 @@ function TambahTugas() {
         if (uploadedFiles) {
           unggahFile(res.data.data)
         }
+        toast.success("Tugas berhasil ditambahkan!");
         navigate("/admin/semua-tugas");
       })
       .catch((err) => {
         toast.error(err);
+        toast.error("Gagal menambahkan tugas!");
       });
   };
 
   const anggota = async () => {
     await api
-      .get("/user", {
+      .get("/pengguna", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },

@@ -1,7 +1,7 @@
 export interface Bulanan extends User{
   bulan: number,
   tahun: number,
-  user_tugas: Tugas[]
+  tugas_pengguna: Tugas[]
 }
 
 export interface Tugas {
@@ -15,8 +15,8 @@ export interface Tugas {
   tanggal_dibuat?: Date;
   tanggal_diubah?: Date;
   terlambat: boolean;
-  user_tugas: User[];
-  file?: Files[]
+  tugas_pengguna: User[];
+  berkas?: Files[]
 }
 
 export interface Files{
@@ -35,7 +35,7 @@ export interface User {
 
 export interface Mingguan extends User {
   _count: {
-    user_tugas: number;
+    tugas_pengguna: number;
   };
 }
 

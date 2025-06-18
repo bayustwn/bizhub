@@ -29,7 +29,7 @@ function Dashboard() {
 
   const getTotal = async () => {
     await api
-      .get("/user/mingguan", {
+      .get("/pengguna/mingguan", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -60,10 +60,11 @@ function Dashboard() {
     },
     {
       name: "Total Tugas",
-      selector: (row) => row._count.user_tugas,
+      selector: (row) => row._count.tugas_pengguna,
+      center : true,
       cell: (row) => {
         return (
-          <p className="font-bold text-primary">{row._count.user_tugas}</p>
+          <p className="font-bold text-primary">{row._count.tugas_pengguna}</p>
         );
       },
     },
@@ -100,7 +101,9 @@ function Dashboard() {
               value={tugasTerlambat()}
               background="bg-red"
             />
-            <More style="self-end" />
+            <div className="self-end cursor-pointer" onClick={()=>navigate("/admin/semua-tugas")}>
+            <More  />
+            </div>
           </div>
         </div>
       </div>
@@ -120,7 +123,9 @@ function Dashboard() {
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Performa Mingguan</p>
+            <div onClick={()=>navigate("/admin/anggota")}>
             <More />
+            </div>
           </div>
           <DataTable
             highlightOnHover

@@ -55,7 +55,7 @@ function TugasAnggota() {
         </div>
         <div className="border-1 border-black/20" />
         <div className="flex flex-row flex-wrap text-black font-medium gap-2">
-          {detail?.file.map((file) => {
+          {detail?.berkas?.map((file) => {
             return (
               <div
                 key={file.id}
@@ -69,7 +69,7 @@ function TugasAnggota() {
           })}
         </div>
         <div className="flex flex-row flex-wrap text-primary font-medium gap-2">
-          {detail?.user_tugas.map((user: User, index) => {
+          {detail?.tugas_pengguna.map((user: User, index) => {
             return (
               <div
                 key={index}

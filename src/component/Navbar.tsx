@@ -14,7 +14,7 @@ function Navbar({ title,id,style }: NavbarItems) {
 
   const profile = async () => {
     await axios
-      .get(import.meta.env.VITE_BASE_URL + "/user/profile",{headers : {Authorization : 'Bearer ' + getToken() }})
+      .get(import.meta.env.VITE_BASE_URL + "/pengguna/profil",{headers : {Authorization : 'Bearer ' + getToken() }})
       .then((res) => {
         setName(res.data.data.nama);
         id?.(res.data.data.id);

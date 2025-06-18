@@ -14,7 +14,7 @@ function PerformaAnggota() {
   const [posisi,setPosisi] = useState<Posisi[]>()
 
   const ambilPosisi = async() => {
-    await api.get("/user/posisi",{
+    await api.get("/pengguna/posisi",{
       headers : {
         Authorization : "Bearer " + getToken()
       }
@@ -25,7 +25,7 @@ function PerformaAnggota() {
 
   const getAnggotaTim = async () => {
     await api
-      .post("/user/bulanan",
+      .post("/pengguna/bulanan",
         { bulan: 5, tahun: 2025 },
         {
           headers: {
@@ -51,6 +51,7 @@ function PerformaAnggota() {
     {
       name: "Performa",
       selector: (row) => row.penilaian,
+      center: true,
       cell: (row) => {
         switch (row.penilaian) {
           case "Baik":

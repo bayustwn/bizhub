@@ -18,7 +18,7 @@ function Dashboard() {
 
   const getTugas = async () => {
     await api
-      .get("/tugas/user/" + id, {
+      .get("/tugas/pengguna/" + id, {
         headers: { Authorization: "Bearer " + getToken() },
       })
       .then((res) => {

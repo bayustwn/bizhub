@@ -39,7 +39,7 @@ function Anggota() {
 
   const getTugas = async () => {
     await api
-      .post( "/user/bulanan/" + id,
+      .post( "/pengguna/bulanan/" + id,
         {
           bulan: bulanTahun.bulan,
           tahun: bulanTahun.tahun,
@@ -54,15 +54,15 @@ function Anggota() {
   };
 
   const tugasSelesai = (): number => {
-    let terbaru: number = bulnanan?.user_tugas
-      ? bulnanan.user_tugas?.filter((data) => data.status == "Selesai").length
+    let terbaru: number = bulnanan?.tugas_pengguna
+      ? bulnanan.tugas_pengguna?.filter((data) => data.status == "Selesai").length
       : 0;
     return terbaru;
   };
 
   const tugasTerlambat = (): number => {
-    let terbaru: number = bulnanan?.user_tugas
-      ? bulnanan?.user_tugas.filter((data) => data.terlambat == true).length
+    let terbaru: number = bulnanan?.tugas_pengguna
+      ? bulnanan?.tugas_pengguna.filter((data) => data.terlambat == true).length
       : 0;
     return terbaru;
   };
@@ -122,7 +122,7 @@ function Anggota() {
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
           <div className="flex font-bold flex-col flex-2">
             <p>Total Tugas</p>
-            <KomponenGrafikBulanan tugas={bulnanan?.user_tugas || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
+            <KomponenGrafikBulanan tugas={bulnanan?.tugas_pengguna || []} bulan={bulanTahun.bulan} tahun={bulanTahun.tahun}/>
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter
@@ -139,7 +139,6 @@ function Anggota() {
               value={tugasTerlambat()}
               background="bg-red"
             />
-            <More style="self-end" />
           </div>
         </div>
       </div>
@@ -160,7 +159,7 @@ function Anggota() {
           </div>
           <SummaryTable
             click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
-            data={bulnanan?.user_tugas!}
+            data={bulnanan?.tugas_pengguna!}
           />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
@@ -179,7 +178,7 @@ function Anggota() {
           </div>
           <SummaryTable
             click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
-            data={bulnanan?.user_tugas.filter((tugas) => tugas.terlambat)!}
+            data={bulnanan?.tugas_pengguna.filter((tugas) => tugas.terlambat)!}
           />
         </div>
       </div>

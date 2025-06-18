@@ -1,20 +1,23 @@
 import { useNavigate, useParams } from "react-router";
-import Navbar from "../../../../../component/Navbar";
-import SummaryTable from "../../../../../component/table/SummaryTable";
+import Navbar from "../../../component/Navbar";
+import SummaryTable from "../../../component/table/SummaryTable";
 import { useEffect, useState } from "react";
-import api from "../../../../../utils/Api";
-import { useToken } from "../../../../../utils/Cookies";
-import { Tugas } from "../../../../../models/task/task";
+import api from "../../../utils/Api";
+import { useToken } from "../../../utils/Cookies";
+import { Tugas } from "../../../models/task/task";
 import { TableColumn } from "react-data-table-component";
-import { formatDate } from "../../../../../utils/DateFormat";
+import { formatDate } from "../../../utils/DateFormat";
 
-function TugasAnggota() {
-  const {bulan,tahun,id} = useParams()
+function SemuaTugasTeam() {
+  const { bulan, tahun } = useParams();
   const navigate = useNavigate();
-  const {getToken} = useToken();
-  const [tugas,setTugas] = useState<Tugas[]>();
+  const { getToken } = useToken();
+  const [tugas, setTugas] = useState<Tugas[]>();
+  const [id, setId] = useState<string>();
 
-    const getTugas = async () => {
+  const getTugas = async () => {
+    if (!id) return;
+    
     await api
       .post("/pengguna/bulanan/" + id,
         {
@@ -26,29 +29,21 @@ function TugasAnggota() {
         }
       )
       .then((res) => {
-        setTugas(res.data.data.tugas_pengguna)
+        setTugas(res.data.data.tugas_pengguna);
       });
   };
 
-  useEffect(()=>{
-    getTugas()
-  },[])
+  useEffect(() => {
+    if (id) {
+      getTugas();
+    }
+  }, [id, bulan, tahun]);
 
   const columns: TableColumn<Tugas>[] = [
     {
       name: "Judul",
       selector: (row) => row.judul,
-      cell : (row)=>{
-        return <p className={row.terlambat? `text-red font-bold` : `text-black` }>{row.judul}</p>
-      }
-    },
-    {
-      name: "Kuantitas",
-      selector: (row)=> row.kuantitas
-    },
-    {
-      name: "Tenggat",
-      selector: (row) => formatDate(row.deadline),
+      sortable: true,
     },
     {
       name: "Status",
@@ -84,6 +79,16 @@ function TugasAnggota() {
         }
       },
     },
+    {
+      name: "Deadline",
+      selector: (row) => formatDate(row.deadline),
+      sortable: true,
+    },
+    {
+      name: "Kuantitas",
+      selector: (row) => row.kuantitas,
+      sortable: true,
+    },
   ];
 
   return (
@@ -95,13 +100,17 @@ function TugasAnggota() {
           src="/assets/icons/back.svg"
           alt="back"
         />
-        <Navbar title="Semua Tugas" />
+        <Navbar id={(id) => setId(id)} title="Semua Tugas" />
       </div>
       <div className="p-8 border-2 bg-white h-screen rounded-lg">
-        <SummaryTable column={columns} data={tugas!} click={(id)=>navigate("/admin/semua-tugas/tugas/" + id)} />
+        <SummaryTable 
+          column={columns} 
+          data={tugas || []} 
+          click={(id) => navigate("/team/semua-tugas/tugas/" + id)} 
+        />
       </div>
     </div>
   );
 }
 
-export default TugasAnggota;
+export default SemuaTugasTeam; 

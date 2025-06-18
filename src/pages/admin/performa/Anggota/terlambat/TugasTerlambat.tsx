@@ -14,7 +14,7 @@ function TugasTerlambat() {
 
     const getTugas = async () => {
     await api
-      .post("/user/bulanan/" + id,
+      .post("/pengguna/bulanan/" + id,
         {
           bulan: Number(bulan),
           tahun: Number(tahun),
@@ -24,7 +24,7 @@ function TugasTerlambat() {
         }
       )
       .then((res) => {
-        setTugas(res.data.data.user_tugas)
+        setTugas(res.data.data.tugas_pengguna)
       });
   };
 

@@ -20,7 +20,7 @@ function Anggota() {
 
   const hapusAnggota = async (id: string) => {
     await api
-      .delete("/user/hapus/" + id, {
+      .delete("/pengguna/hapus/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -36,7 +36,7 @@ function Anggota() {
 
   const ambilPosisi = async () => {
     await api
-      .get("/user/posisi", {
+      .get("/pengguna/posisi", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -48,7 +48,7 @@ function Anggota() {
 
   const getAnggotaTim = async () => {
     await api
-      .get("/user", {
+      .get("/pengguna", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -66,13 +66,15 @@ function Anggota() {
     {
       name: "Nama",
       selector: (row) => row.nama,
+      maxWidth: "160px"
     },
     {
       name: "Tugas Aktif",
-      selector: (row) => row._count.user_tugas,
+      selector: (row) => row._count.tugas_pengguna,
+      center: true,
       cell: (row) => {
         return (
-          <p className="font-bold text-primary">{row._count.user_tugas}</p>
+          <p className="font-bold text-primary">{row._count.tugas_pengguna || 0}</p>
         );
       },
     },
@@ -180,7 +182,7 @@ function Anggota() {
           );
         })}
       </div>
-      <div className="flex flex-row gap-2 h-fit">
+      <div className="flex flex-row gap-2 w-full h-fit">
         {posisi?.map((posisi) => {
           return (
             <div

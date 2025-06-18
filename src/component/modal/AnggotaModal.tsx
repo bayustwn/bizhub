@@ -38,30 +38,26 @@ const AnggotaModal = ({
   const [password, setPassword] = useState<string>();
   const { getToken } = useToken();
 
-  const tambahAnggota = async () => {
-    await api
-      .post(
-        "/user/create",
-        {
-          ...anggota,
-          password,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + getToken(),
-          },
-        }
-      )
-      .then(() => {
-        toast.success("Sukses Menambah Anggota");
-      }).catch(()=>{
-        toast.error("Error menambah anggota")
-      });
+  const tambahAnggota = async (data: User) => {
+    await api.post("/pengguna/tambah", {
+      ...data,
+      password : password
+    },{
+      headers : {
+        Authorization : "Bearer " + getToken()
+      }
+    })
+    .then(() => {
+      toast.success("Anggota berhasil ditambahkan!");
+    })
+    .catch((err) => {
+      toast.error(err.response?.data?.message || "Gagal menambahkan anggota!");
+    });
   };
 
   const detail = async() => {
     await api
-      .get("/user/detail/" + id, {
+      .get("/pengguna/detail/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -72,17 +68,19 @@ const AnggotaModal = ({
   };
 
   const ubahAnggota = async () => {
-    await api.put("/user/ubah/" + id, {
+    await api.put("/pengguna/ubah/" + id, {
       ...anggota,
       password : password
     },{
       headers : {
         Authorization : "Bearer " + getToken()
       }
-    }).then(()=>{
-      toast.success("Anggota Berhasil diubah!")
-    }).catch(()=>{
-      toast.error("Anggota Gagal diubah!")
+    })
+    .then(() => {
+      toast.success("Anggota berhasil diubah!");
+    })
+    .catch((err) => {
+      toast.error(err.response?.data?.message || "Gagal mengubah anggota!");
     });
   };
 
@@ -146,7 +144,7 @@ const AnggotaModal = ({
           <button
             onClick={async () => {
               if (tambah) {
-                await tambahAnggota();
+                await tambahAnggota(anggota);
               } else {
                 await ubahAnggota();
               }

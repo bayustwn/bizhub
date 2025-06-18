@@ -19,21 +19,21 @@ function Login() {
     if (email && password) {
       setIsLogin(true);
       await api
-        .post("/auth/login", {
+        .post("/autentikasi/masuk", {
           email,
           password,
         })
         .then(async (res) => {
-
           const token = res.data.data.token;
           const jwt: any = jwtDecode(token);
           setToken(token);
+          toast.success("Login berhasil!");
 
           const token_notif = await getToken(messaging, {
             vapidKey: import.meta.env.VITE_APP_VAPID_KEY,
           });
 
-          await api.post("/notif/tambah", {
+          await api.post("/notifikasi/tambah", {
             token: token_notif,
             id_user: jwt.id,
           })
