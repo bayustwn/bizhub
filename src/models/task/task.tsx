@@ -1,3 +1,9 @@
+export interface Bulanan extends User{
+  bulan: number,
+  tahun: number,
+  tugas_pengguna: Tugas[]
+}
+
 export interface Tugas {
   id: string;
   brief: string;
@@ -9,11 +15,19 @@ export interface Tugas {
   tanggal_dibuat?: Date;
   tanggal_diubah?: Date;
   terlambat: boolean;
-  user_tugas: User[]
+  tugas_pengguna: User[];
+  berkas?: Files[]
+}
+
+export interface Files{
+  id: string;
+  nama: string;
+  nama_file: string;
+  url: string;
 }
 
 export interface User {
-  id: string;
+  id?: string;
   nama: string;
   email: string;
   posisi: string;
@@ -21,7 +35,7 @@ export interface User {
 
 export interface Mingguan extends User {
   _count: {
-    user_tugas: number;
+    tugas_pengguna: number;
   };
 }
 

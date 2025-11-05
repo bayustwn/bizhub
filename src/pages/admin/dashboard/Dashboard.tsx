@@ -1,34 +1,35 @@
-import axios from "axios";
+import api from "../../../utils/Api";
 import Counter from "../../../component/card/Counter";
 import More from "../../../component/card/More";
 import Navbar from "../../../component/Navbar";
 import { useEffect, useState } from "react";
 import { useToken } from "../../../utils/Cookies";
 import { Mingguan, Tugas } from "../../../models/task/task";
-import DataTable, {
-  TableColumn,
-} from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
 import SummaryTable from "../../../component/table/SummaryTable";
 import { filterRange } from "../../../utils/FilterTugas";
+import { useNavigate } from "react-router";
+import KomponenGrafikMingguan from "../../../component/chart/KomponenGrafikMingguan";
 
 function Dashboard() {
   const { getToken } = useToken();
+  const navigate = useNavigate();
   const [tugas, setTugas] = useState<Tugas[]>();
   const [total, setTotal] = useState<Mingguan[]>();
 
   const getTugas = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/tugas", {
+    await api
+      .get("/tugas", {
         headers: { Authorization: "Bearer " + getToken() },
       })
       .then((res) => {
         setTugas(res.data.data);
-      });
+      })
   };
 
   const getTotal = async () => {
-    await axios
-      .get(import.meta.env.VITE_BASE_URL + "/user/mingguan", {
+    await api
+      .get("/pengguna/mingguan", {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
@@ -47,7 +48,7 @@ function Dashboard() {
 
   const tugasTerlambat = (): number => {
     let terbaru: number = tugas
-      ? tugas.filter((data) => data.terlambat == true).length
+      ? tugas.filter((data) => data.terlambat).length
       : 0;
     return terbaru;
   };
@@ -59,10 +60,11 @@ function Dashboard() {
     },
     {
       name: "Total Tugas",
-      selector: (row) => row._count.user_tugas,
+      selector: (row) => row._count.tugas_pengguna,
+      center : true,
       cell: (row) => {
         return (
-          <p className="font-bold text-primary">{row._count.user_tugas}</p>
+          <p className="font-bold text-primary">{row._count.tugas_pengguna}</p>
         );
       },
     },
@@ -78,8 +80,11 @@ function Dashboard() {
       <Navbar title="Dasbor" />
       <div className="flex mt-5 flex-col h-100">
         <div className="flex-1 p-6 gap-5 text-lg flex flex-row bg-white border-1 border-black rounded-lg">
-          <div className="flex font-bold flex-col flex-2">
+          <div className="flex font-bold gap-10 flex-col flex-2">
             <p>Total Tugas Mingguan</p>
+            <div>
+              <KomponenGrafikMingguan tugas={tugas || []} />
+            </div>
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <Counter
@@ -96,7 +101,9 @@ function Dashboard() {
               value={tugasTerlambat()}
               background="bg-red"
             />
-            <More style="self-end" />
+            <div className="self-end cursor-pointer" onClick={()=>navigate("/admin/semua-tugas")}>
+            <More  />
+            </div>
           </div>
         </div>
       </div>
@@ -104,14 +111,21 @@ function Dashboard() {
         <div className="flex-2 flex flex-col items-center p-6 bg-white border-1 border-black rounded-lg bg-primary">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Tugas Terbaru</p>
-            <More />
+            <div onClick={() => navigate("/admin/semua-tugas")}>
+              <More />
+            </div>
           </div>
-          <SummaryTable data={filterRange(tugas!, 7)} />
+          <SummaryTable
+            click={(id) => navigate("/admin/semua-tugas/tugas/" + id)}
+            data={filterRange(tugas!, 7).splice(0, 5)}
+          />
         </div>
         <div className="flex-1 bg-white border-1 flex flex-col p-6 items-center border-black rounded-lg">
           <div className="flex flex-row justify-between w-full items-center">
             <p className="font-bold">Performa Mingguan</p>
+            <div onClick={()=>navigate("/admin/anggota")}>
             <More />
+            </div>
           </div>
           <DataTable
             highlightOnHover

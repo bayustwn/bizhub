@@ -1,52 +1,60 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import api from "../../utils/Api";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Loading from "../../component/Loading";
 import { useToken } from "../../utils/Cookies";
+import { getToken } from "firebase/messaging";
+import { messaging } from "../../firebase/fireBaseConfig";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const [isLoading, setIsLogin] = useState<boolean>(false);
-  const {getToken,setToken,getPosisi,setPosisi} = useToken()
-  
+  const { setToken } = useToken();
 
   const handleLogin = async () => {
     if (email && password) {
-        setIsLogin(true);
-        await axios
-          .post(import.meta.env.VITE_BASE_URL + "/auth/login", {
-            email,
-            password,
-          })
-          .then((res) => {
-            console.log("Response login:", res.data);
-        
-            const posisi = res.data.data.posisi;
-            const token = res.data.data.token;
+      setIsLogin(true);
+      await api
+        .post("/autentikasi/masuk", {
+          email,
+          password,
+        })
+        .then(async (res) => {
+          const token = res.data.data.token;
+          const jwt: any = jwtDecode(token);
+          setToken(token);
+          toast.success("Login berhasil!");
 
-            setToken(token);
-            setPosisi(posisi);
-          
-            if (posisi === "admin") {
-              navigate("/admin/dashboard");
-            } else {
-              navigate("/team/dashboard");
-            }
-          })
-          .catch((err) => {
-            toast.error(err.response.data?.message);
-          })
-          .finally(() => {
-            setIsLogin(false);
+          const token_notif = await getToken(messaging, {
+            vapidKey: import.meta.env.VITE_APP_VAPID_KEY,
           });
+
+          await api.post("/notifikasi/tambah", {
+            token: token_notif,
+            id_user: jwt.id,
+          })
+
+          if (jwt.posisi === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/team/dashboard");
+          }
+        })
+        .catch((err) => {
+          toast.error(err.response.data?.message);
+        })
+        .finally(() => {
+          setIsLogin(false);
+        });
     } else {
       toast.error("Isi form dengan benar!");
     }
   };
-  
+
   return (
     <div className="justify-center font-poppins flex items-center h-screen w-screen">
       <div className="flex flex-col gap-3 w-1/4">

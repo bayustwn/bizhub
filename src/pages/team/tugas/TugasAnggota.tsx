@@ -1,36 +1,46 @@
-import { useEffect, useState } from "react";
+import api from "../../../utils/Api";
 import Navbar from "../../../component/Navbar";
 import Status from "../../../component/status/Status";
 import { StatusModel } from "../../../models/task/status";
-import { Tugas } from "../../../models/task/task";
-import api from "../../../utils/Api";
+import { useEffect, useState } from "react";
 import { useToken } from "../../../utils/Cookies";
-import TugasCard from "../../../component/card/TugasCard";
+import { Tugas } from "../../../models/task/task";
 import { useNavigate } from "react-router";
-import ConfirmModal from "../../../component/modal/ConfirmModal";
-import toast from "react-hot-toast";
-import {
-  closestCorners,
-  DndContext,
-  useDroppable,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import TugasCard from "../../../component/card/TugasCard";
+import { closestCorners, DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@dnd-kit/core';
+import { toast } from "react-hot-toast";
 
-function SemuaTugas() {
-  const [tugas, setTugas] = useState<Tugas[]>([]);
-  const navigate = useNavigate();
-  const { getToken } = useToken();
-  const [modal, setModal] = useState<boolean>(false);
+
+function PenggunaTugas() {
   const [id, setId] = useState<string>();
+  const navigate = useNavigate();
+  const [semuaTugas, setSemuaTugas] = useState<Tugas[]>([]);
+  const { getToken } = useToken();
 
-  const konfirmasiHapus = (id: string) => {
-    setId(id);
-    setModal(true);
-  };
+  const status: StatusModel[] = [
+    {
+      status: "Dibuat",
+      value: 0,
+    },
+    {
+      status: "Dikerjakan",
+      value: 0,
+    },
+    {
+      status: "Ditinjau",
+      value: 0,
+    },
+    {
+      status: "Revisi",
+      value: 0,
+    },
+    {
+      status: "Selesai",
+      value: 0,
+    },
+  ];
 
-  const updateStatus = async (id: string, status: string) => {
+    const updateStatus = async (id: string, status: string) => {
     await api
       .put("/tugas/ubah/status",
         {
@@ -44,7 +54,7 @@ function SemuaTugas() {
         }
       )
       .then(() => {
-        ambilSemuaTugas();
+        tugasAnggota();
         toast.success("Status tugas berhasil diubah!");
       })
       .catch(() => {
@@ -52,91 +62,53 @@ function SemuaTugas() {
       });
   };
 
-  const hapusTugas = async () => {
+  const tugasAnggota = async () => {
     await api
-      .delete("/tugas/hapus/" + id, {
-        headers: {
-          Authorization: "Bearer " + getToken(),
-        },
-      })
-      .then(async (res) => {
-        await ambilSemuaTugas().then(() => {
-          setModal(false);
-          toast.success(res.data.message);
-        });
-      })
-      .catch(() => {
-        toast.error("Gagal menghapus tugas!");
-      });
-  };
-
-  const ambilSemuaTugas = async () => {
-    await api
-      .get("/tugas", {
+      .get("/tugas/pengguna/" + id, {
         headers: {
           Authorization: "Bearer " + getToken(),
         },
       })
       .then((res) => {
-        setTugas(res.data.data);
+        setSemuaTugas(res.data.data);
       });
   };
+  
+    const sensors = useSensors(
+      useSensor(PointerSensor, {
+        activationConstraint: {
+          delay: 200,
+          tolerance: 5,
+        },
+      })
+    );
 
   useEffect(() => {
-    ambilSemuaTugas();
-  }, []);
-
-  const status: StatusModel[] = [
-    { status: "Dibuat", value: 0 },
-    { status: "Dikerjakan", value: 0 },
-    { status: "Ditinjau", value: 0 },
-    { status: "Revisi", value: 0 },
-    { status: "Selesai", value: 0 },
-  ];
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 5,
-      },
-    })
-  );
+    if (id) {
+      tugasAnggota();
+    }
+  }, [id]);
 
   return (
-    <div className="flex flex-col font-poppins gap-2">
-      <div
-        onClick={() => navigate(location.pathname + "/tugas/tambah")}
-        className="bg-primary-200 border-2 bottom-10 right-10 cursor-pointer border-primary flex flex-row items-center gap-5 py-3 px-5 text-primary font-bold absolute rounded-4xl"
-      >
-        <p className="text-md">Tambah Tugas</p>
-        <img width={15} src="/assets/icons/plus.svg" alt="add" />
-      </div>
-
-      <ConfirmModal
-        confirmText="Hapus"
-        title="Yakin ingin menghapus?"
-        message="Data tugas tidak dapat dipulihkan setelah dihapus!"
-        isOpen={modal}
-        onCancel={() => setModal(false)}
-        onConfirm={hapusTugas}
+    <div className="flex flex-col z-index-0 font-poppins gap-2">
+      <Navbar
+        id={(id) => setId(id)}
+        title="Semua Tugas"
+        style="w-screen pr-10"
       />
-
-      <Navbar title="Semua Tugas" style="w-screen pr-10" />
-
       <div className="flex gap-5 h-screen w-screen flex-row mt-10 pr-10">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragEnd={(e) => {
             if(e.active.data.current?.status != e.over?.id){
-              const index = tugas.findIndex(
+              const index = semuaTugas?.findIndex(
               (tugas) => tugas.id === e.active.id.toString()
             );
-            const newTugas = [...tugas];
+            const newTugas = [...semuaTugas];
             newTugas[index].status = e.over?.id.toString() || "";
             newTugas[index].tanggal_diubah = new Date()
-            setTugas(newTugas);
+            setSemuaTugas(newTugas);
             updateStatus(e.active.id.toString(), e.over?.id.toString() || "");
             }
           }}
@@ -152,7 +124,7 @@ function SemuaTugas() {
                     style={`${isOver? "border-primary" : "border-black"}`}
                     status={status}
                     value={
-                      tugas?.filter((tugas) => tugas.status === status)
+                      semuaTugas?.filter((tugas) => tugas.status === status)
                         .length || 0
                     }
                   />
@@ -161,7 +133,7 @@ function SemuaTugas() {
                     id={status}
                     className={`min-h-[200px] transition-all duration-200 p-2 rounded-xl`}
                   >
-                    {tugas
+                    {semuaTugas
                       .sort((a, b) => {
                         const tanggalA = a.tanggal_diubah
                           ? new Date(a.tanggal_diubah).getTime()
@@ -179,7 +151,7 @@ function SemuaTugas() {
                             key={tugasItem.id}
                             id={tugasItem.id}
                             terlambat={tugasItem.terlambat}
-                            admin={true}
+                            admin={false}
                             status={tugasItem.status}
                             onClick={() =>
                               navigate(
@@ -191,13 +163,6 @@ function SemuaTugas() {
                             kuantitas={tugasItem.kuantitas}
                             deadline={tugasItem.deadline}
                             user={tugasItem.tugas_pengguna.length}
-                            onDelete={() => konfirmasiHapus(tugasItem.id)}
-                            onEdit={() =>
-                              navigate(
-                                `${location.pathname}/tugas/edit/` +
-                                  tugasItem.id
-                              )
-                            }
                             style={`transition-all ${
                               isDragging ? "border-primary" : "border-black"
                             }`}
@@ -217,4 +182,4 @@ function SemuaTugas() {
   );
 }
 
-export default SemuaTugas;
+export default PenggunaTugas;
